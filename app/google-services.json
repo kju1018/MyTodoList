@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1043531138617",
+    "project_id": "my-todolist-b52ae",
+    "storage_bucket": "my-todolist-b52ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1043531138617:android:dc82d4143c67c7a9dbafe8",
+        "android_client_info": {
+          "package_name": "com.kmsapp.mytodolist"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1043531138617-5ca2623a4ijib1as4ptmch98ogumi9m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVGP-Lm2-kLMYnLcrKvXekALnbvASAji0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1043531138617-5ca2623a4ijib1as4ptmch98ogumi9m9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
