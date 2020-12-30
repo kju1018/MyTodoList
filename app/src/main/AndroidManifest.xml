@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTodoList">
-        <activity android:name=".View.Todo_Today">
+        <activity android:name=".View.Todo_TodayActivity">
         </activity>
         <activity android:name=".View.MainActivity">
             <intent-filter>

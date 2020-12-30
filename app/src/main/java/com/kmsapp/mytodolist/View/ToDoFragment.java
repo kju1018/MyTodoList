@@ -40,7 +40,7 @@ public class ToDoFragment extends Fragment {
         todo_today.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Todo_Today.class);
+                Intent intent = new Intent(getActivity(), Todo_TodayActivity.class);
                 startActivity(intent);
             }
         });
