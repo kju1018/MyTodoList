@@ -3,6 +3,7 @@ package com.kmsapp.mytodolist.View;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,20 +17,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.kmsapp.mytodolist.Interface.Add_todoListener;
+import com.kmsapp.mytodolist.Interface.Repeat_Listener;
 import com.kmsapp.mytodolist.R;
 
 import java.util.Calendar;
 
 public class Todo_add_dialog extends BottomSheetDialogFragment {
 
-    private Add_totoListener add_totoListener;
+    private Add_todoListener add_todoListener;
     private EditText todo_add_content;
     private ImageButton todo_add_save,todo_add_calendar_off,
             todo_add_calendar_on, todo_add_repeat_off, todo_add_repeat_on;
     private TextView todo_add_date;
 
+    private Repeat_Dialog repeat_dialog;
+
     private Calendar cal;
+    private  String today= "";
     private int y, m, d;
+    private String dayN = "", dayK;
 
 
     public static Todo_add_dialog newInstance() {
@@ -64,7 +71,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         y = cal.get(Calendar.YEAR);
         m = cal.get(Calendar.MONTH) + 1;
         d = cal.get(Calendar.DATE);
-        String today =  y + "년 " + m + "월 " + d + "일";
+        today =  y + "년 " + m + "월 " + d + "일";
         todo_add_date.setText(today);
 
         todo_add_calendar_off.setOnClickListener(new View.OnClickListener() {
@@ -88,17 +95,46 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
                 todo_add_repeat_on.setVisibility(View.VISIBLE);
                 todo_add_calendar_off.setVisibility(View.VISIBLE);
                 todo_add_calendar_on.setVisibility(View.GONE);
+
+                loadRepeatInfo();
+            }
+        });
+
+        todo_add_repeat_on.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadRepeatInfo();
             }
         });
 
         todo_add_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_totoListener.save(todo_add_content.getText().toString());
+                add_todoListener.save(todo_add_content.getText().toString());
             }
         });
 
         return view;
+    }
+
+    private void loadRepeatInfo() {
+        if(dayN.length() == 0) {
+            repeat_dialog = Repeat_Dialog.newInstance();
+        }else {
+            repeat_dialog = Repeat_Dialog.newInstance(dayN);
+        }
+        repeat_dialog.setRepeat_listener(new Repeat_Listener() {
+            @Override
+            public void loadDay(String dayNumber, String dayKor, SparseBooleanArray checkedItems) {
+                dayN = dayNumber;
+                dayK = dayKor;
+                if(dayKor.length() == 0)
+                    todo_add_date.setText(today);
+                else
+                    todo_add_date.setText(dayKor);
+            }
+        });
+        repeat_dialog.show(getFragmentManager(),"repeat_dialog");
     }
 
     private void selectDate() {
@@ -122,12 +158,10 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
     }
 
 
-    interface Add_totoListener {
-        void save(String example);
-    }
 
-    public void setAdd_totoListener(Add_totoListener listener){
-        this.add_totoListener = listener;
+
+    public void setAdd_todoListener(Add_todoListener listener){
+        this.add_todoListener = listener;
     }
 
 }

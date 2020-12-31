@@ -2,21 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".View.Repeat_Dialog"
     android:orientation="vertical">
 
+    <ListView
+        android:id="@+id/todo_repeat_listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:scrollbars="none"/>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
+        <Button
+            android:id="@+id/repeat_cancle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="취소"
+            android:textColor="#000000"
+            />
 
-
-
+        <Button
+            android:id="@+id/repeat_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="확인"
+            android:textColor="#000000"/>
 
     </LinearLayout>
-
-
-
-
 </LinearLayout>

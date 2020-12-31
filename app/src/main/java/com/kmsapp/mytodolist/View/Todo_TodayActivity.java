@@ -10,9 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.R;
 
-public class Todo_TodayActivity extends AppCompatActivity implements Todo_add_dialog.Add_totoListener {
+public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
@@ -47,7 +48,7 @@ public class Todo_TodayActivity extends AppCompatActivity implements Todo_add_di
             @Override
             public void onClick(View view) {
                 todo_add_dialog = Todo_add_dialog.newInstance();
-                todo_add_dialog.setAdd_totoListener(Todo_TodayActivity.this);
+                todo_add_dialog.setAdd_todoListener(Todo_TodayActivity.this);
                 FragmentManager fm = getSupportFragmentManager();
                 todo_add_dialog.show(fm, "todo_add_dialog");
             }
