@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
+import com.kmsapp.mytodolist.Model.Todo;
 import com.kmsapp.mytodolist.R;
+import com.kmsapp.mytodolist.Repository.FireBaseRepository;
 
 public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener {
 
@@ -20,12 +22,15 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
     private FloatingActionButton todo_add;
     private Todo_add_dialog todo_add_dialog;
     private ImageView arrow_dropdown, arrow_dropup;
+    private FireBaseRepository fireBaseRepository;
+
     private TextView textView;
     //예시
 
     @Override
-    public void save(String example) {
-        textView.setText(example);
+    public void save(Todo todo) {
+        fireBaseRepository = new FireBaseRepository();
+        fireBaseRepository.TodoUpload(todo);
     }
 
     @Override
@@ -40,7 +45,6 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
 
         toolbar_title.setText("오늘 할 일");
 //        arrow_dropdown.setVisibility(View.VISIBLE);
-
         textView = findViewById(R.id.example_text);
         //예시
 

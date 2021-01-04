@@ -73,14 +73,13 @@ public class Repeat_Dialog extends DialogFragment {
         cancle = view.findViewById(R.id.repeat_cancle);
         listView = view.findViewById(R.id.todo_repeat_listview);
 
-        dayotweek.add("일");//1
-        dayotweek.add("월");//2
-        dayotweek.add("화");//3
-        dayotweek.add("수");//4
-        dayotweek.add("목");//5
-        dayotweek.add("금");//6
-        dayotweek.add("토");//7
-
+        dayotweek.add("월");
+        dayotweek.add("화");
+        dayotweek.add("수");
+        dayotweek.add("목");
+        dayotweek.add("금");
+        dayotweek.add("토");
+        dayotweek.add("일");
         arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_multiple_choice,dayotweek);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -88,7 +87,7 @@ public class Repeat_Dialog extends DialogFragment {
         if(checked.length() != 0){
             int position;
             for (int i = 0; i < checked.length(); i++) {
-                position = Integer.parseInt(String.valueOf(checked.charAt(i)))-1;
+                position = Integer.parseInt(String.valueOf(checked.charAt(i)));
                 listView.setItemChecked(position,true);
             }
         }
@@ -103,16 +102,22 @@ public class Repeat_Dialog extends DialogFragment {
                 String dayKor = "";
                 for (int i = 0; i <= dayotweek.size(); i++) {
                     if (checkedItems.get(i)) {
-                        dayNumber += (i+1);
+                        dayNumber += i;
                         dayKor += dayotweek.get(i) + ", ";
                     }
-                    Log.d("asdf", "onClick: " + checkedItems.get(i));
                 }
                 if(dayKor.length() != 0) {
                     dayKor = dayKor.substring(0, dayKor.length() - 2);
 
                 }
                 repeat_listener.loadDay(dayNumber, dayKor, checkedItems);
+                dismiss();
+            }
+        });
+
+        cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 dismiss();
             }
         });

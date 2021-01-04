@@ -1,6 +1,7 @@
 package com.kmsapp.mytodolist.View;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -11,6 +12,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,24 +22,35 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
+import com.kmsapp.mytodolist.Model.Todo;
 import com.kmsapp.mytodolist.R;
 
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private Add_todoListener add_todoListener;
     private EditText todo_add_content;
     private ImageButton todo_add_save,todo_add_calendar_off,
-            todo_add_calendar_on, todo_add_repeat_off, todo_add_repeat_on;
-    private TextView todo_add_date;
+            todo_add_calendar_on, todo_add_repeat_off, todo_add_repeat_on,
+            todo_add_time_on, todo_add_time_off, todo_add_time_reset;
+    private TextView todo_add_date, todo_add_time;
 
     private Repeat_Dialog repeat_dialog;
 
-    private Calendar cal;
-    private  String today= "";
-    private int y, m, d;
-    private String dayN = "", dayK;
+    private LocalDate selectDate;
+    private LocalTime selectTime;
+    private String strSelectDate = "";
+    private String strSelectTime = "";
+    private int y, m, d, hour, min;
+    private boolean isRepeat = false;
+
+    private String selectRepeatDayN = "", selectRepeatDayK = "";
+
 
 
     public static Todo_add_dialog newInstance() {
@@ -59,20 +73,33 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo_add_content = view.findViewById(R.id.todo_add_content);
 
         todo_add_date = view.findViewById(R.id.todo_add_date);
+        todo_add_time = view.findViewById(R.id.todo_add_time);
 
         todo_add_calendar_off = view.findViewById(R.id.todo_add_calendar_off);
         todo_add_calendar_on = view.findViewById(R.id.todo_add_calendar_on);
         todo_add_repeat_off = view.findViewById(R.id.todo_add_repeat_off);
         todo_add_repeat_on = view.findViewById(R.id.todo_add_repeat_on);
+        todo_add_time_off = view.findViewById(R.id.todo_add_time_off);
+        todo_add_time_on = view.findViewById(R.id.todo_add_time_on);
+        todo_add_time_reset = view.findViewById(R.id.todo_add_time_reset);
 
         todo_add_save = view.findViewById(R.id.todo_add_save);
 
-        cal = Calendar.getInstance();
-        y = cal.get(Calendar.YEAR);
-        m = cal.get(Calendar.MONTH) + 1;
-        d = cal.get(Calendar.DATE);
-        today =  y + "년 " + m + "월 " + d + "일";
-        todo_add_date.setText(today);
+        selectDate = LocalDate.now();//오늘날짜
+        selectTime = null;
+
+        y = selectDate.getYear();
+        m = selectDate.getMonthValue();
+        d = selectDate.getDayOfMonth();
+        hour = 9;
+        min = 0;
+
+
+        strSelectDate =  y + "년 " + m + "월 " + d + "일" ;
+        todo_add_date.setText(strSelectDate);
+
+        strSelectTime = "알림 없음";
+        todo_add_time.setText(strSelectTime);
 
         todo_add_calendar_off.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,47 +118,141 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo_add_repeat_off.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                todo_add_repeat_off.setVisibility(View.GONE);
-                todo_add_repeat_on.setVisibility(View.VISIBLE);
-                todo_add_calendar_off.setVisibility(View.VISIBLE);
-                todo_add_calendar_on.setVisibility(View.GONE);
-
-                loadRepeatInfo();
+                selectRepeat();
             }
         });
 
         todo_add_repeat_on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadRepeatInfo();
+                selectRepeat();
             }
         });
+
+        todo_add_time_off.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                todo_add_time_off.setVisibility(View.GONE);
+                todo_add_time_on.setVisibility(View.VISIBLE);
+                selectTime();
+            }
+        });
+
+        todo_add_time_on.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectTime();
+            }
+        });
+
+        todo_add_time_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hour = 9;
+                min = 0;
+                strSelectTime = "알림없음";
+                selectTime = null;
+                todo_add_time.setText(strSelectTime);
+            }
+        });
+
 
         todo_add_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add_todoListener.save(todo_add_content.getText().toString());
+                Todo todo = new Todo();
+                if(isRepeat){
+                    saveRepeat(todo);
+                }else{
+                    saveSchedule(todo);
+                }
             }
         });
 
         return view;
     }
 
-    private void loadRepeatInfo() {
-        if(dayN.length() == 0) {
+    private void saveSchedule(Todo todo) {
+        String content = todo_add_content.getText().toString();
+
+        todo.setContents(content);
+        todo.setDate(LocalDate.of(selectDate.getYear(), selectDate.getMonthValue(), selectDate.getDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        todo.setRepeat(isRepeat);
+        todo.setRepeatDay(null);
+        if(selectTime != null){
+            todo.setTime(LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME));
+        }else{
+            todo.setTime(null);
+        }
+
+        add_todoListener.save(todo);
+        dismiss();
+    }
+
+    private void saveRepeat(Todo todo) {
+        String content = todo_add_content.getText().toString();
+        Queue<String> repeatDay = new LinkedList<>();
+        for (int i = 0; i < selectRepeatDayN.length(); i++) {
+            repeatDay.add(String.valueOf(selectRepeatDayN.charAt(i)));
+        }
+
+        todo.setContents(content);
+        todo.setDate(null);
+        todo.setRepeat(isRepeat);
+        todo.setRepeatDay(repeatDay);
+        if(selectTime != null){
+            todo.setTime(LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME));
+        }else{
+            todo.setTime(null);
+        }
+
+        add_todoListener.save(todo);
+        dismiss();
+    }
+
+    private void selectTime() {
+        TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                hour = i;
+                min = i1;
+                strSelectTime = i+"시 "+ i1 + "분";
+                selectTime = LocalTime.of(i, i1);
+
+                todo_add_time.setText(strSelectTime);
+            }
+        }, hour, min, false);
+        dialog.setTitle("알림 시간");
+        dialog.show();
+    }
+
+    private void selectRepeat() {
+
+        if(selectRepeatDayN.length() == 0) {
             repeat_dialog = Repeat_Dialog.newInstance();
         }else {
-            repeat_dialog = Repeat_Dialog.newInstance(dayN);
+            repeat_dialog = Repeat_Dialog.newInstance(selectRepeatDayN);
         }
         repeat_dialog.setRepeat_listener(new Repeat_Listener() {
             @Override
             public void loadDay(String dayNumber, String dayKor, SparseBooleanArray checkedItems) {
-                dayN = dayNumber;
-                dayK = dayKor;
-                if(dayKor.length() == 0)
-                    todo_add_date.setText(today);
+                isRepeat = true;
+                todo_add_repeat_off.setVisibility(View.GONE);
+                todo_add_repeat_on.setVisibility(View.VISIBLE);
+                todo_add_calendar_off.setVisibility(View.VISIBLE);
+                todo_add_calendar_on.setVisibility(View.GONE);
+
+                selectRepeatDayN = dayNumber;//123
+                selectRepeatDayK = dayKor;//월화수
+                if(selectRepeatDayK.length() == 0) {
+                    isRepeat = false;
+                    todo_add_date.setText(strSelectDate);
+                    todo_add_repeat_off.setVisibility(View.VISIBLE);
+                    todo_add_repeat_on.setVisibility(View.GONE);
+
+                }
                 else
-                    todo_add_date.setText(dayKor);
+                    todo_add_date.setText(selectRepeatDayK);
             }
         });
         repeat_dialog.show(getFragmentManager(),"repeat_dialog");
@@ -142,6 +263,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                isRepeat = false;
                 todo_add_calendar_off.setVisibility(View.GONE);
                 todo_add_calendar_on.setVisibility(View.VISIBLE);
                 todo_add_repeat_on.setVisibility(View.GONE);
@@ -149,15 +271,15 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
                 y = i;
                 m = i1 + 1;
                 d = i2;
-                String date = y + "년 " + m + "월 " + d + "일";
-                todo_add_date.setText(date);
+                selectDate = LocalDate.of(y, m, d);
+                strSelectDate = y + "년 " + m + "월 " + d + "일";
+                todo_add_date.setText(strSelectDate);
+
             }
         }, y, m - 1, d);
 
         datePickerDialog.show();
     }
-
-
 
 
     public void setAdd_todoListener(Add_todoListener listener){

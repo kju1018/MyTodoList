@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:hint="일정 입력"
         android:textSize="20sp"
+        android:textColor="@color/black"
         android:background="@null"/>
 
     <LinearLayout
@@ -25,6 +26,7 @@
             android:layout_weight="1"
             android:textSize="15sp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="날짜" />
 
         <TextView
@@ -34,6 +36,7 @@
             android:layout_weight="1"
             android:textSize="15sp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:text="시간" />
 
     </LinearLayout>
@@ -77,18 +80,37 @@
             android:visibility="gone"/>
 
         <ImageButton
+            android:id="@+id/todo_add_time_off"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/time_24"
             android:background="@android:color/transparent"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="15dp"
+            android:visibility="visible"/>
 
         <ImageButton
+            android:id="@+id/todo_add_time_on"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/rank_24"
+            android:src="@drawable/time_24_black"
             android:background="@android:color/transparent"
-            android:layout_marginLeft="15dp"/>
+            android:layout_marginLeft="15dp"
+            android:visibility="gone"/>
+
+        <ImageButton
+            android:id="@+id/todo_add_time_reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/timer_reset_24"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="15dp" />
+
+<!--        <ImageButton-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/rank_24"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:layout_marginLeft="15dp"/>-->
 
         <LinearLayout
             android:layout_width="match_parent"
