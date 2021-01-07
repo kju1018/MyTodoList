@@ -14,26 +14,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-<!--        android:id="@+id/today_recycler"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/include"-->
-<!--        android:background="#000000"/>-->
-
-    <TextView
-        android:id="@+id/example_text"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/today_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:text="예시"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toBottomOf="@+id/include"
+        android:background="#FFFFFF"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/todo_add"

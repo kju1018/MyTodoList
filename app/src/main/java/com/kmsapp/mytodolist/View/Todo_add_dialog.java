@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +27,9 @@ import com.kmsapp.mytodolist.R;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class Todo_add_dialog extends BottomSheetDialogFragment {
@@ -44,14 +45,14 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private LocalDate selectDate;
     private LocalTime selectTime;
-    private String strSelectDate = "";
-    private String strSelectTime = "";
+    private String textViewDate = "", textViewTime = "", textViewRepeatDayK = "";
+
     private int y, m, d, hour, min;
     private boolean isRepeat = false;
 
-    private String selectRepeatDayN = "", selectRepeatDayK = "";
+    private String strSelectRepeatDayN = "";
 
-
+    private List strSelectRepeatDayEN = new ArrayList();
 
     public static Todo_add_dialog newInstance() {
         Todo_add_dialog fragment = new Todo_add_dialog();
@@ -95,11 +96,11 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         min = 0;
 
 
-        strSelectDate =  y + "년 " + m + "월 " + d + "일" ;
-        todo_add_date.setText(strSelectDate);
+        textViewDate =  y + "년 " + m + "월 " + d + "일" ;
+        todo_add_date.setText(textViewDate);
 
-        strSelectTime = "알림 없음";
-        todo_add_time.setText(strSelectTime);
+        textViewTime = "알림 없음";
+        todo_add_time.setText(textViewTime);
 
         todo_add_calendar_off.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,9 +151,9 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 hour = 9;
                 min = 0;
-                strSelectTime = "알림없음";
+                textViewTime = "알림없음";
                 selectTime = null;
-                todo_add_time.setText(strSelectTime);
+                todo_add_time.setText(textViewTime);
             }
         });
 
@@ -174,13 +175,17 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private void saveSchedule(Todo todo) {
         String content = todo_add_content.getText().toString();
+        String strSelectDate = LocalDate.of(selectDate.getYear(), selectDate.getMonthValue(), selectDate.getDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         todo.setContents(content);
-        todo.setDate(LocalDate.of(selectDate.getYear(), selectDate.getMonthValue(), selectDate.getDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        todo.setDate(strSelectDate);
         todo.setRepeat(isRepeat);
         todo.setRepeatDay(null);
+        todo.setRepeatDayEn(null);
+
         if(selectTime != null){
-            todo.setTime(LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME));
+            String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME);
+            todo.setTime(strSelectTime);
         }else{
             todo.setTime(null);
         }
@@ -191,17 +196,22 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private void saveRepeat(Todo todo) {
         String content = todo_add_content.getText().toString();
-        Queue<String> repeatDay = new LinkedList<>();
-        for (int i = 0; i < selectRepeatDayN.length(); i++) {
-            repeatDay.add(String.valueOf(selectRepeatDayN.charAt(i)));
+
+        List repeatDay = new ArrayList();
+
+        for (int i = 0; i < strSelectRepeatDayN.length(); i++) {
+            repeatDay.add(String.valueOf(strSelectRepeatDayN.charAt(i)));
         }
 
         todo.setContents(content);
         todo.setDate(null);
         todo.setRepeat(isRepeat);
         todo.setRepeatDay(repeatDay);
+        todo.setRepeatDayEn(strSelectRepeatDayEN);
+
         if(selectTime != null){
-            todo.setTime(LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME));
+            String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME);
+            todo.setTime(strsSelectTime);
         }else{
             todo.setTime(null);
         }
@@ -216,10 +226,10 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 hour = i;
                 min = i1;
-                strSelectTime = i+"시 "+ i1 + "분";
+                textViewTime = i+"시 "+ i1 + "분";
                 selectTime = LocalTime.of(i, i1);
 
-                todo_add_time.setText(strSelectTime);
+                todo_add_time.setText(textViewTime);
             }
         }, hour, min, false);
         dialog.setTitle("알림 시간");
@@ -228,31 +238,35 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private void selectRepeat() {
 
-        if(selectRepeatDayN.length() == 0) {
+        if(strSelectRepeatDayN.length() == 0) {
             repeat_dialog = Repeat_Dialog.newInstance();
         }else {
-            repeat_dialog = Repeat_Dialog.newInstance(selectRepeatDayN);
+            repeat_dialog = Repeat_Dialog.newInstance(strSelectRepeatDayN);
         }
         repeat_dialog.setRepeat_listener(new Repeat_Listener() {
             @Override
-            public void loadDay(String dayNumber, String dayKor, SparseBooleanArray checkedItems) {
+            public void loadDay(String dayNumber, String dayKor, List dayEn, SparseBooleanArray checkedItems) {
                 isRepeat = true;
                 todo_add_repeat_off.setVisibility(View.GONE);
                 todo_add_repeat_on.setVisibility(View.VISIBLE);
                 todo_add_calendar_off.setVisibility(View.VISIBLE);
                 todo_add_calendar_on.setVisibility(View.GONE);
 
-                selectRepeatDayN = dayNumber;//123
-                selectRepeatDayK = dayKor;//월화수
-                if(selectRepeatDayK.length() == 0) {
+                strSelectRepeatDayN = dayNumber;//123
+                textViewRepeatDayK = dayKor;//월화수
+                strSelectRepeatDayEN = dayEn;
+
+                Log.d("asdf", "loadDay: " + strSelectRepeatDayEN.toString());
+
+                if(textViewRepeatDayK.length() == 0) {
                     isRepeat = false;
-                    todo_add_date.setText(strSelectDate);
+                    todo_add_date.setText(textViewDate);
                     todo_add_repeat_off.setVisibility(View.VISIBLE);
                     todo_add_repeat_on.setVisibility(View.GONE);
-
+                    strSelectRepeatDayEN.clear();
                 }
                 else
-                    todo_add_date.setText(selectRepeatDayK);
+                    todo_add_date.setText(textViewRepeatDayK);
             }
         });
         repeat_dialog.show(getFragmentManager(),"repeat_dialog");
@@ -272,8 +286,8 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
                 m = i1 + 1;
                 d = i2;
                 selectDate = LocalDate.of(y, m, d);
-                strSelectDate = y + "년 " + m + "월 " + d + "일";
-                todo_add_date.setText(strSelectDate);
+                textViewDate = y + "년 " + m + "월 " + d + "일";
+                todo_add_date.setText(textViewDate);
 
             }
         }, y, m - 1, d);

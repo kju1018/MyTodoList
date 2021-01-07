@@ -34,6 +34,7 @@ public class Repeat_Dialog extends DialogFragment {
 
     private ArrayAdapter<String> arrayAdapter;
     private List dayotweek = new ArrayList();
+    private List dayotweekEn = new ArrayList();
 
     private Repeat_Listener repeat_listener;
     private String checked = "";
@@ -80,6 +81,15 @@ public class Repeat_Dialog extends DialogFragment {
         dayotweek.add("금");
         dayotweek.add("토");
         dayotweek.add("일");
+
+        dayotweekEn.add("MONDAY");
+        dayotweekEn.add("TUESDAY");
+        dayotweekEn.add("WEDNESDAY");
+        dayotweekEn.add("THURSDAY");
+        dayotweekEn.add("FRIDAY");
+        dayotweekEn.add("SATURDAY");
+        dayotweekEn.add("SUNDAY");
+
         arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_multiple_choice,dayotweek);
 
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -100,17 +110,19 @@ public class Repeat_Dialog extends DialogFragment {
                 //TODO 일단은 스트링으로 넘겨주고 나중에 바꿔줌
                 String dayNumber = "";
                 String dayKor = "";
+                List dayEn = new ArrayList();
                 for (int i = 0; i <= dayotweek.size(); i++) {
                     if (checkedItems.get(i)) {
                         dayNumber += i;
                         dayKor += dayotweek.get(i) + ", ";
+                        dayEn.add(dayotweekEn.get(i));
                     }
                 }
                 if(dayKor.length() != 0) {
                     dayKor = dayKor.substring(0, dayKor.length() - 2);
 
                 }
-                repeat_listener.loadDay(dayNumber, dayKor, checkedItems);
+                repeat_listener.loadDay(dayNumber, dayKor, dayEn, checkedItems);
                 dismiss();
             }
         });

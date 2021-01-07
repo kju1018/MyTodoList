@@ -1,8 +1,7 @@
 package com.kmsapp.mytodolist.Model;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Todo {
     private String contents;
@@ -11,18 +10,20 @@ public class Todo {
     private String date;
     private String time;
     private boolean isRepeat;
-    private Queue<String> repeatDay;
+    private List repeatDay;
+    private List repeatDayEn;
 
 
     public Todo() {
     }
 
-    public Todo(String contents, String date, String time, boolean isRepeat, Queue<String> repeatDay) {
+    public Todo(String contents, String date, String time, boolean isRepeat, List repeatDay, List repeatDayEn) {
         this.contents = contents;
         this.date = date;
         this.time = time;
         this.isRepeat = isRepeat;
         this.repeatDay = repeatDay;
+        this.repeatDayEn = repeatDayEn;
     }
 
     public String getContents() {
@@ -57,12 +58,20 @@ public class Todo {
         isRepeat = repeat;
     }
 
-    public Queue<String> getRepeatDay() {
+    public List getRepeatDay() {
         return repeatDay;
     }
 
-    public void setRepeatDay(Queue<String> repeatDay) {
+    public void setRepeatDay(List repeatDay) {
         this.repeatDay = repeatDay;
+    }
+
+    public List getRepeatDayEn() {
+        return repeatDayEn;
+    }
+
+    public void setRepeatDayEn(List repeatDayEn) {
+        this.repeatDayEn = repeatDayEn;
     }
 
     @Override
@@ -73,6 +82,7 @@ public class Todo {
                 ", time='" + time + '\'' +
                 ", isRepeat=" + isRepeat +
                 ", repeatDay=" + repeatDay +
+                ", repeatDayEn=" + repeatDayEn +
                 '}';
     }
 }
