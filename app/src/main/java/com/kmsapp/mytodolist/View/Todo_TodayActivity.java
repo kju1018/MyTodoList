@@ -1,51 +1,49 @@
 package com.kmsapp.mytodolist.View;
 
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kmsapp.mytodolist.Adapter.Todo_Today_Adapter;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
+import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.Model.Todo;
 import com.kmsapp.mytodolist.R;
-import com.kmsapp.mytodolist.Repository.FireBaseRepository;
+import com.kmsapp.mytodolist.Repository.FireBasePresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener {
+public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener, UserView {
 
     private Toolbar toolbar;
     private TextView toolbar_title;
     private FloatingActionButton todo_add;
     private Todo_add_dialog todo_add_dialog;
-    private ImageView arrow_dropdown, arrow_dropup;
-    private FireBaseRepository fireBaseRepository;
+    private FireBasePresenter fireBasePresenter;
     private RecyclerView recyclerView;
     private Todo_Today_Adapter todo_today_adapter;
+    private Todo_Today_Adapter.OnItemClickListener onItemClickListener;
 
-    private LiveData<List<Todo>> datas;
-    //예시
+    private List<Todo> datas = new ArrayList<>();
 
     @Override
     public void save(Todo todo) {
-        fireBaseRepository.TodoUpload(todo);
+        fireBasePresenter.TodoUpload(todo);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_today);
-        fireBaseRepository = new FireBaseRepository();
+        fireBasePresenter = new FireBasePresenter(this);
 
         toolbar = findViewById(R.id.m_toolbar);
         toolbar_title = findViewById(R.id.toolbar_title);
@@ -54,12 +52,26 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
 
         toolbar_title.setText("오늘 할 일");
 
-        fireBaseRepository.TodayTodoLoad().observe(this, new Observer<ArrayList<Todo>>() {
+        onItemClickListener = new Todo_Today_Adapter.OnItemClickListener() {
             @Override
-            public void onChanged(ArrayList<Todo> todos) {
-                todo_today_adapter = new Todo_Today_Adapter(todos);
-                recyclerView.setAdapter(todo_today_adapter);
+            public void onItemClick(Todo todo) {
+
             }
+
+            @Override
+            public void checkBoxClick(Todo todo) {
+                fireBasePresenter.TodoComplete(todo);
+                Log.d("asdf", "checkBoxClick: fdfdf");
+            }
+        };
+
+
+
+        fireBasePresenter.TodayTodoLoad().observe(this, todos -> {
+            datas = todos;
+            todo_today_adapter = new Todo_Today_Adapter(todos);
+            todo_today_adapter.setOnItemClickListener(onItemClickListener);
+            recyclerView.setAdapter(todo_today_adapter);
         });
 
         todo_add.setOnClickListener(new View.OnClickListener() {
@@ -74,4 +86,18 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
 
     }
 
+    @Override
+    public void showLoadError(String message) {
+
+    }
+
+    @Override
+    public void loadingStart() {
+
+    }
+
+    @Override
+    public void loadingEnd() {
+
+    }
 }

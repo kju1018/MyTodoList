@@ -2,10 +2,13 @@ package com.kmsapp.mytodolist.Repository;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -13,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.kmsapp.mytodolist.ID.TodoID;
+import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.Model.Todo;
 
 import java.lang.reflect.Array;
@@ -24,23 +28,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-public class FireBaseRepository {
+public class FireBasePresenter {
     private FirebaseFirestore mStore;
+    private UserView userView;
     private String TAG  =  "asdf";
 
     private ArrayList<Todo> datas = new ArrayList<>();
     private MutableLiveData<ArrayList<Todo>> liveDatas = new MutableLiveData<>();
 
-    public FireBaseRepository() {
+    public FireBasePresenter(UserView userView) {
         mStore = FirebaseFirestore.getInstance();
+        this.userView = userView;
     }
 
     public void TodoUpload(Todo todo){
+        userView.loadingStart();
         String getid = mStore.collection("test").document().getId();
-        mStore.collection("test").document(getid).set(todo, SetOptions.merge());
+        todo.setTodoId(getid);
+        mStore.collection("test").document(getid).set(todo, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        userView.loadingEnd();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                userView.showLoadError(e.getMessage());
+                userView.loadingEnd();
+            }
+        });
     }
 
     public MutableLiveData<ArrayList<Todo>> TodayTodoLoad(){
+        userView.loadingStart();
         mStore.collection("test").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -48,7 +69,9 @@ public class FireBaseRepository {
                     datas.clear();
                     for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                         Todo todo = null;
+
                         Map<String, Object> snap = documentSnapshot.getData();
+                        String todoId = (String) snap.get(TodoID.todoId);
                         String contents = (String) snap.get(TodoID.contents);
                         String date = (String) snap.get(TodoID.date);
                         boolean repeat = (boolean) snap.get(TodoID.repeat);
@@ -58,25 +81,49 @@ public class FireBaseRepository {
 
                         LocalDate today = LocalDate.now();
                         String strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        if(repeat == true){
+                        if(repeat){
                             if(repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))){
-                                todo = new Todo(contents, strToday, time, repeat, repeatDay, repeatDayEn);
+                                todo = new Todo(todoId, contents, strToday, time, repeat, repeatDay, repeatDayEn);
                                 datas.add(todo);
                             }
                         }else {
                             if(date.equals(strToday)){
-                                todo = new Todo(contents, date, time, repeat, repeatDay, repeatDayEn);
+                                todo = new Todo(todoId, contents, date, time, repeat, repeatDay, repeatDayEn);
                                 datas.add(todo);
                             }
                         }
-
                     }
                     liveDatas.setValue(datas);
                 }
             }
         });
-
+        userView.loadingEnd();
         return liveDatas;
+    }
+
+    public void TodoComplete(Todo todo){
+        userView.loadingStart();
+        if (todo.isRepeat()) {
+        }
+        else {
+            mStore.collection("test").document(todo.getTodoId()).delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            userView.loadingEnd();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    userView.loadingEnd();
+                }
+            });
+
+            String getid = mStore.collection("test").document().getId();
+            mStore.collection("complete").document(getid).set(todo, SetOptions.merge())
+            ;
+            Log.d(TAG, "TodoComplete: dfd");
+        }
     }
 }
 

@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Todo {
+    private String todoId;
     private String contents;
-    //    private LocalDate date;
-//    private LocalTime time;
     private String date;
     private String time;
     private boolean isRepeat;
@@ -18,6 +17,16 @@ public class Todo {
     }
 
     public Todo(String contents, String date, String time, boolean isRepeat, List repeatDay, List repeatDayEn) {
+        this.contents = contents;
+        this.date = date;
+        this.time = time;
+        this.isRepeat = isRepeat;
+        this.repeatDay = repeatDay;
+        this.repeatDayEn = repeatDayEn;
+    }
+
+    public Todo(String todoId, String contents, String date, String time, boolean isRepeat, List repeatDay, List repeatDayEn) {
+        this.todoId = todoId;
         this.contents = contents;
         this.date = date;
         this.time = time;
@@ -72,6 +81,14 @@ public class Todo {
 
     public void setRepeatDayEn(List repeatDayEn) {
         this.repeatDayEn = repeatDayEn;
+    }
+
+    public String getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(String todoId) {
+        this.todoId = todoId;
     }
 
     @Override
