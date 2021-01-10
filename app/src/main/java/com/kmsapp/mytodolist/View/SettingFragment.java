@@ -17,10 +17,8 @@ public class SettingFragment extends Fragment {
     public SettingFragment() {
     }
 
-    public static SettingFragment newInstance(String param1, String param2) {
+    public static SettingFragment newInstance() {
         SettingFragment fragment = new SettingFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 

@@ -28,9 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 public class Todo_add_dialog extends BottomSheetDialogFragment {
 
@@ -135,14 +133,14 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
             public void onClick(View view) {
                 todo_add_time_off.setVisibility(View.GONE);
                 todo_add_time_on.setVisibility(View.VISIBLE);
-                selectTime();
+                selectTimeSetting();
             }
         });
 
         todo_add_time_on.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectTime();
+                selectTimeSetting();
             }
         });
 
@@ -161,11 +159,10 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo_add_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Todo todo = new Todo();
                 if(isRepeat){
-                    saveRepeat(todo);
+                    saveRepeat();
                 }else{
-                    saveSchedule(todo);
+                    saveSchedule();
                 }
             }
         });
@@ -173,18 +170,21 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         return view;
     }
 
-    private void saveSchedule(Todo todo) {
+    private void saveSchedule() {
+        Todo todo = new Todo();
+
         String content = todo_add_content.getText().toString();
         String strSelectDate = LocalDate.of(selectDate.getYear(), selectDate.getMonthValue(), selectDate.getDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         todo.setContents(content);
         todo.setDate(strSelectDate);
         todo.setRepeat(isRepeat);
+        todo.setRepeatComplete("notComplete");
         todo.setRepeatDay(null);
         todo.setRepeatDayEn(null);
 
         if(selectTime != null){
-            String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME);
+            String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
             todo.setTime(strSelectTime);
         }else{
             todo.setTime(null);
@@ -194,7 +194,8 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         dismiss();
     }
 
-    private void saveRepeat(Todo todo) {
+    private void saveRepeat() {
+        Todo todo = new Todo();
         String content = todo_add_content.getText().toString();
 
         List repeatDay = new ArrayList();
@@ -206,11 +207,12 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo.setContents(content);
         todo.setDate(null);
         todo.setRepeat(isRepeat);
+        todo.setRepeatComplete("notComplete");
         todo.setRepeatDay(repeatDay);
         todo.setRepeatDayEn(strSelectRepeatDayEN);
 
         if(selectTime != null){
-            String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ISO_TIME);
+            String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
             todo.setTime(strsSelectTime);
         }else{
             todo.setTime(null);
@@ -220,7 +222,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         dismiss();
     }
 
-    private void selectTime() {
+    private void selectTimeSetting() {
         TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {

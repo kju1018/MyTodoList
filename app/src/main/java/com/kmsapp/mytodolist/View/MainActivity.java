@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
-    private ToDoFragment toDoFragment = new ToDoFragment();
-    private SettingFragment settingFragment = new SettingFragment();
-    private CalendarFragment calendarFragment = new CalendarFragment();
+    private ToDoFragment toDoFragment = ToDoFragment.newInstance();
+    private SettingFragment settingFragment = SettingFragment.newInstance();
+    private CalendarFragment calendarFragment = CalendarFragment.newInstance();
 
     private Toolbar toolbar;
     @Override

@@ -20,7 +20,7 @@
             android:button="@drawable/custom_checkbox"/>
 
         <LinearLayout
-            android:id="@+id/todo_info"
+            android:id="@+id/todo_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
@@ -33,6 +33,13 @@
                 android:text="오늘 할 일"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/repeatImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/repeat_black_24"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/todo_time"

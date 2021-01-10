@@ -36,6 +36,8 @@ public class FireBasePresenter {
     private ArrayList<Todo> datas = new ArrayList<>();
     private MutableLiveData<ArrayList<Todo>> liveDatas = new MutableLiveData<>();
 
+    private String strToday = "";
+
     public FireBasePresenter(UserView userView) {
         mStore = FirebaseFirestore.getInstance();
         this.userView = userView;
@@ -45,56 +47,57 @@ public class FireBasePresenter {
         userView.loadingStart();
         String getid = mStore.collection("test").document().getId();
         todo.setTodoId(getid);
+
         mStore.collection("test").document(getid).set(todo, SetOptions.merge())
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        userView.loadingEnd();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                userView.showLoadError(e.getMessage());
-                userView.loadingEnd();
-            }
-        });
+                .addOnSuccessListener(aVoid -> {
+                    userView.showComplete("추가 완료");
+                    userView.loadingEnd();
+                }).addOnFailureListener(e -> {
+                    userView.showLoadError("할 일 추가 오류");
+                    userView.loadingEnd();
+                });
     }
 
     public MutableLiveData<ArrayList<Todo>> TodayTodoLoad(){
         userView.loadingStart();
-        mStore.collection("test").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (value != null){
-                    datas.clear();
-                    for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+        mStore.collection("test").addSnapshotListener((value, error) -> {
+            if (value != null){
+                datas.clear();
+                for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                    if(documentSnapshot != null) {
                         Todo todo = null;
+                        LocalDate today = LocalDate.now();
+                        strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
                         Map<String, Object> snap = documentSnapshot.getData();
-                        String todoId = (String) snap.get(TodoID.todoId);
-                        String contents = (String) snap.get(TodoID.contents);
-                        String date = (String) snap.get(TodoID.date);
-                        boolean repeat = (boolean) snap.get(TodoID.repeat);
-                        List repeatDay = (ArrayList) snap.get(TodoID.repeatDay);
-                        List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
-                        String time = (String) snap.get(TodoID.time);
+                        String repeatComplete = (String) snap.get(TodoID.repeatComplete);
 
-                        LocalDate today = LocalDate.now();
-                        String strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                        if(repeat){
-                            if(repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))){
-                                todo = new Todo(todoId, contents, strToday, time, repeat, repeatDay, repeatDayEn);
-                                datas.add(todo);
-                            }
-                        }else {
-                            if(date.equals(strToday)){
-                                todo = new Todo(todoId, contents, date, time, repeat, repeatDay, repeatDayEn);
-                                datas.add(todo);
+                        if(!repeatComplete.equals(strToday)){
+                            String todoId = (String) snap.get(TodoID.todoId);
+                            String contents = (String) snap.get(TodoID.contents);
+                            String date = (String) snap.get(TodoID.date);
+                            boolean repeat = (boolean) snap.get(TodoID.repeat);
+
+                            List repeatDay = (ArrayList) snap.get(TodoID.repeatDay);
+                            List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
+                            String time = (String) snap.get(TodoID.time);
+
+
+                            if (repeat) {
+                                if (repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))) {
+                                    todo = new Todo(todoId, contents, strToday, time, repeat, repeatComplete, repeatDay, repeatDayEn);
+                                    datas.add(todo);
+                                }
+                            } else {
+                                if (date.equals(strToday)) {
+                                    todo = new Todo(todoId, contents, date, time, repeat, repeatComplete, repeatDay, repeatDayEn);
+                                    datas.add(todo);
+                                }
                             }
                         }
                     }
-                    liveDatas.setValue(datas);
                 }
+                liveDatas.setValue(datas);
             }
         });
         userView.loadingEnd();
@@ -103,39 +106,46 @@ public class FireBasePresenter {
 
     public void TodoComplete(Todo todo){
         userView.loadingStart();
-        if (todo.isRepeat()) {
+        String getid = mStore.collection("complete").document().getId();
+        todo.setCompleteId(getid);
+        if (todo.isRepeat()) {// 습관이라면
+            todo.setRepeatComplete(strToday);
+
+            mStore.collection("test").document(todo.getTodoId()).set(todo, SetOptions.merge())
+                    .addOnFailureListener(e -> {
+                        userView.showLoadError("다시 시도해 주세요!");
+                        userView.loadingEnd();
+                    });
+
+
+            mStore.collection("complete").document(getid).set(todo, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        userView.showComplete("할 일 완료");
+                        userView.loadingEnd();
+                    }).addOnFailureListener(e -> {
+                userView.showLoadError("다시 시도해 주세요!");
+                userView.loadingEnd();
+            });
         }
+
         else {
             mStore.collection("test").document(todo.getTodoId()).delete()
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            userView.loadingEnd();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    userView.loadingEnd();
-                }
-            });
+                    .addOnFailureListener(e -> {
+                        userView.showLoadError("다시 시도해 주세요!");
+                        userView.loadingEnd();
+                    });
 
-            String getid = mStore.collection("test").document().getId();
             mStore.collection("complete").document(getid).set(todo, SetOptions.merge())
-            ;
+                    .addOnSuccessListener(aVoid -> {
+                        userView.showComplete("할 일 완료");
+                        userView.loadingEnd();
+                    }).addOnFailureListener(e -> {
+                userView.showLoadError("다시 시도해 주세요!");
+                userView.loadingEnd();
+            });
             Log.d(TAG, "TodoComplete: dfd");
         }
     }
 }
 
 
-
-/*
-
-2. MutableLivedate로 리턴하고
-엑티비티에서는 LiveDate<List<Todo>>로 선언
-
-3. 여기서 LiveData도 만들어주고
-LiveData = Mutabledata 이런식으로 해줌
-
-
- */

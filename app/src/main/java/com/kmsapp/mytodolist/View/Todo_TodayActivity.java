@@ -3,7 +3,9 @@ package com.kmsapp.mytodolist.View;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -31,6 +33,8 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
     private RecyclerView recyclerView;
     private Todo_Today_Adapter todo_today_adapter;
     private Todo_Today_Adapter.OnItemClickListener onItemClickListener;
+    private ProgressBar progressBar;
+
 
     private List<Todo> datas = new ArrayList<>();
 
@@ -50,21 +54,21 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
         recyclerView = findViewById(R.id.today_recycler);
         todo_add = findViewById(R.id.todo_add);
 
+        progressBar = findViewById(R.id.todo_today_progressBar);
+
         toolbar_title.setText("오늘 할 일");
 
         onItemClickListener = new Todo_Today_Adapter.OnItemClickListener() {
             @Override
             public void onItemClick(Todo todo) {
-
+                //TODO 상세정보
             }
 
             @Override
             public void checkBoxClick(Todo todo) {
                 fireBasePresenter.TodoComplete(todo);
-                Log.d("asdf", "checkBoxClick: fdfdf");
             }
         };
-
 
 
         fireBasePresenter.TodayTodoLoad().observe(this, todos -> {
@@ -74,30 +78,34 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
             recyclerView.setAdapter(todo_today_adapter);
         });
 
-        todo_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                todo_add_dialog = Todo_add_dialog.newInstance();
-                todo_add_dialog.setAdd_todoListener(Todo_TodayActivity.this);
-                FragmentManager fm = getSupportFragmentManager();
-                todo_add_dialog.show(fm, "todo_add_dialog");
-            }
+        todo_add.setOnClickListener(view -> {
+            todo_add_dialog = Todo_add_dialog.newInstance();
+            todo_add_dialog.setAdd_todoListener(Todo_TodayActivity.this);
+            FragmentManager fm = getSupportFragmentManager();
+            todo_add_dialog.show(fm, "todo_add_dialog");
         });
 
     }
 
     @Override
     public void showLoadError(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
 
+    @Override
+    public void showComplete(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void loadingStart() {
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
 
     }
 
     @Override
     public void loadingEnd() {
-
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -5,10 +5,12 @@ import java.util.List;
 
 public class Todo {
     private String todoId;
+    private String completeId;
     private String contents;
     private String date;
     private String time;
     private boolean isRepeat;
+    private String repeatComplete;
     private List repeatDay;
     private List repeatDayEn;
 
@@ -16,23 +18,41 @@ public class Todo {
     public Todo() {
     }
 
-    public Todo(String contents, String date, String time, boolean isRepeat, List repeatDay, List repeatDayEn) {
+    public Todo(String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDay, List repeatDayEn) {
         this.contents = contents;
         this.date = date;
         this.time = time;
         this.isRepeat = isRepeat;
+        this.repeatComplete = repeatComplete;
         this.repeatDay = repeatDay;
         this.repeatDayEn = repeatDayEn;
     }
 
-    public Todo(String todoId, String contents, String date, String time, boolean isRepeat, List repeatDay, List repeatDayEn) {
+    public Todo(String todoId, String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDay, List repeatDayEn) {
         this.todoId = todoId;
         this.contents = contents;
         this.date = date;
         this.time = time;
         this.isRepeat = isRepeat;
+        this.repeatComplete = repeatComplete;
         this.repeatDay = repeatDay;
         this.repeatDayEn = repeatDayEn;
+    }
+
+    public String getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(String todoId) {
+        this.todoId = todoId;
+    }
+
+    public String getCompleteId() {
+        return completeId;
+    }
+
+    public void setCompleteId(String completeId) {
+        this.completeId = completeId;
     }
 
     public String getContents() {
@@ -67,6 +87,14 @@ public class Todo {
         isRepeat = repeat;
     }
 
+    public String getRepeatComplete() {
+        return repeatComplete;
+    }
+
+    public void setRepeatComplete(String repeatComplete) {
+        this.repeatComplete = repeatComplete;
+    }
+
     public List getRepeatDay() {
         return repeatDay;
     }
@@ -83,21 +111,15 @@ public class Todo {
         this.repeatDayEn = repeatDayEn;
     }
 
-    public String getTodoId() {
-        return todoId;
-    }
-
-    public void setTodoId(String todoId) {
-        this.todoId = todoId;
-    }
-
     @Override
     public String toString() {
         return "Todo{" +
-                "contents='" + contents + '\'' +
+                "todoId='" + todoId + '\'' +
+                ", contents='" + contents + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
                 ", isRepeat=" + isRepeat +
+                ", repeatComplete='" + repeatComplete + '\'' +
                 ", repeatDay=" + repeatDay +
                 ", repeatDayEn=" + repeatDayEn +
                 '}';

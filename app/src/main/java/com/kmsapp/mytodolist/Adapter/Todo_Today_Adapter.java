@@ -1,10 +1,10 @@
 package com.kmsapp.mytodolist.Adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,9 +50,12 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
             holder.time.setText("시간 없음");
         }
 
+        if(data.isRepeat())
+            holder.repeateImage.setVisibility(View.VISIBLE);
+
         holder.checkBox.setOnClickListener(view -> listener.checkBoxClick(data));
 
-        holder.todo_info.setOnClickListener(view -> listener.onItemClick(data));
+        holder.todo_Linear.setOnClickListener(view -> listener.onItemClick(data));
 
     }
 
@@ -64,17 +67,19 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
 
     class Todo_Today_ViewHolder extends RecyclerView.ViewHolder {
 
+        private CheckBox checkBox;
         private TextView contents;
         private TextView time;
-        private CheckBox checkBox;
-        private LinearLayout todo_info;
+        private ImageView repeateImage;
+        private LinearLayout todo_Linear;
 
         public Todo_Today_ViewHolder(@NonNull View itemView) {
             super(itemView);
-            contents = itemView.findViewById(R.id.todo_content);
-            time = itemView.findViewById(R.id.todo_time);
             checkBox =itemView.findViewById(R.id.todo_check);
-            todo_info = itemView.findViewById(R.id.todo_info);
+            contents = itemView.findViewById(R.id.todo_content);
+            repeateImage = itemView.findViewById(R.id.repeatImage);
+            time = itemView.findViewById(R.id.todo_time);
+            todo_Linear = itemView.findViewById(R.id.todo_linear);
 
         }
     }

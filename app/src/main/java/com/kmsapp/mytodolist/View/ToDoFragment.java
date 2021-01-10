@@ -17,12 +17,10 @@ public class ToDoFragment extends Fragment {
 
     private LinearLayout todo_today;
 
-//    public static ToDoFragment newInstance(String param1, String param2) {
-//        ToDoFragment fragment = new ToDoFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
+    public static ToDoFragment newInstance() {
+        ToDoFragment fragment = new ToDoFragment();
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,12 +35,9 @@ public class ToDoFragment extends Fragment {
 
         todo_today = view.findViewById(R.id.todo_today);
 
-        todo_today.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), Todo_TodayActivity.class);
-                startActivity(intent);
-            }
+        todo_today.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), Todo_TodayActivity.class);
+            startActivity(intent);
         });
 
         return view;
