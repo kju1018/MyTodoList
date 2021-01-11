@@ -1,5 +1,7 @@
 package com.kmsapp.mytodolist.Model;
 
+import com.google.firebase.firestore.FieldValue;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,31 +13,44 @@ public class Todo {
     private String time;
     private boolean isRepeat;
     private String repeatComplete;
-    private List repeatDay;
-    private List repeatDayEn;
+    private List repeatDayKor = new ArrayList();
+    private List repeatDayEn = new ArrayList();
+    private FieldValue timestamp;
 
 
     public Todo() {
     }
 
-    public Todo(String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDay, List repeatDayEn) {
+    public Todo(String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDayKor, List repeatDayEn) {
         this.contents = contents;
         this.date = date;
         this.time = time;
         this.isRepeat = isRepeat;
         this.repeatComplete = repeatComplete;
-        this.repeatDay = repeatDay;
+        this.repeatDayKor = repeatDayKor;
         this.repeatDayEn = repeatDayEn;
     }
 
-    public Todo(String todoId, String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDay, List repeatDayEn) {
+    public Todo(String todoId, String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDayKor, List repeatDayEn) {
         this.todoId = todoId;
         this.contents = contents;
         this.date = date;
         this.time = time;
         this.isRepeat = isRepeat;
         this.repeatComplete = repeatComplete;
-        this.repeatDay = repeatDay;
+        this.repeatDayKor = repeatDayKor;
+        this.repeatDayEn = repeatDayEn;
+    }
+
+    public Todo(String todoId, String completeId, String contents, String date, String time, boolean isRepeat, String repeatComplete, List repeatDayKor, List repeatDayEn) {
+        this.todoId = todoId;
+        this.completeId = completeId;
+        this.contents = contents;
+        this.date = date;
+        this.time = time;
+        this.isRepeat = isRepeat;
+        this.repeatComplete = repeatComplete;
+        this.repeatDayKor = repeatDayKor;
         this.repeatDayEn = repeatDayEn;
     }
 
@@ -95,12 +110,12 @@ public class Todo {
         this.repeatComplete = repeatComplete;
     }
 
-    public List getRepeatDay() {
-        return repeatDay;
+    public List getRepeatDayKor() {
+        return repeatDayKor;
     }
 
-    public void setRepeatDay(List repeatDay) {
-        this.repeatDay = repeatDay;
+    public void setRepeatDayKor(List repeatDayKor) {
+        this.repeatDayKor = repeatDayKor;
     }
 
     public List getRepeatDayEn() {
@@ -111,16 +126,25 @@ public class Todo {
         this.repeatDayEn = repeatDayEn;
     }
 
+    public FieldValue getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(FieldValue timestamp) {
+        this.timestamp = timestamp;
+    }
+
     @Override
     public String toString() {
         return "Todo{" +
                 "todoId='" + todoId + '\'' +
+                ", completeId='" + completeId + '\'' +
                 ", contents='" + contents + '\'' +
                 ", date='" + date + '\'' +
                 ", time='" + time + '\'' +
                 ", isRepeat=" + isRepeat +
                 ", repeatComplete='" + repeatComplete + '\'' +
-                ", repeatDay=" + repeatDay +
+                ", repeatDay=" + repeatDayKor +
                 ", repeatDayEn=" + repeatDayEn +
                 '}';
     }

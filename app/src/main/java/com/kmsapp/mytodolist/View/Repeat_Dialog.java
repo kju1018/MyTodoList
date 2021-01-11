@@ -108,21 +108,23 @@ public class Repeat_Dialog extends DialogFragment {
             public void onClick(View view) {
                 SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
                 //TODO 일단은 스트링으로 넘겨주고 나중에 바꿔줌
-                String dayNumber = "";
-                String dayKor = "";
+                String strDayNumber = "";
+                String strDayKor = "";
                 List dayEn = new ArrayList();
+                List dayKor = new ArrayList();
                 for (int i = 0; i <= dayotweek.size(); i++) {
                     if (checkedItems.get(i)) {
-                        dayNumber += i;
-                        dayKor += dayotweek.get(i) + ", ";
+                        strDayNumber += i;
+                        strDayKor += dayotweek.get(i) + ", ";
                         dayEn.add(dayotweekEn.get(i));
+                        dayKor.add(dayotweek.get(i));
                     }
                 }
-                if(dayKor.length() != 0) {
-                    dayKor = dayKor.substring(0, dayKor.length() - 2);
+                if(strDayKor.length() != 0) {
+                    strDayKor = strDayKor.substring(0, strDayKor.length() - 2);
 
                 }
-                repeat_listener.loadDay(dayNumber, dayKor, dayEn, checkedItems);
+                repeat_listener.loadDay(strDayNumber, strDayKor, dayEn, dayKor, checkedItems);
                 dismiss();
             }
         });

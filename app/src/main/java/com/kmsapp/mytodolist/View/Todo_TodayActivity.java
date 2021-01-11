@@ -47,11 +47,14 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_today);
-        fireBasePresenter = new FireBasePresenter(this);
+        fireBasePresenter = new FireBasePresenter();
+        fireBasePresenter.setUserView(this);
 
         toolbar = findViewById(R.id.m_toolbar);
         toolbar_title = findViewById(R.id.toolbar_title);
         recyclerView = findViewById(R.id.today_recycler);
+
+
         todo_add = findViewById(R.id.todo_add);
 
         progressBar = findViewById(R.id.todo_today_progressBar);
@@ -69,7 +72,6 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
                 fireBasePresenter.TodoComplete(todo);
             }
         };
-
 
         fireBasePresenter.TodayTodoLoad().observe(this, todos -> {
             datas = todos;

@@ -15,7 +15,7 @@ import com.kmsapp.mytodolist.R;
 
 public class ToDoFragment extends Fragment {
 
-    private LinearLayout todo_today;
+    private LinearLayout todo_today, todo_complete;
 
     public static ToDoFragment newInstance() {
         ToDoFragment fragment = new ToDoFragment();
@@ -34,9 +34,15 @@ public class ToDoFragment extends Fragment {
         View view = inflater.inflate(R.layout.todo_fragment, container, false);
 
         todo_today = view.findViewById(R.id.todo_today);
+        todo_complete = view.findViewById(R.id.todo_complete);
 
         todo_today.setOnClickListener(view1 -> {
             Intent intent = new Intent(getActivity(), Todo_TodayActivity.class);
+            startActivity(intent);
+        });
+
+        todo_complete.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getActivity(), Todo_CompleteActivity.class);
             startActivity(intent);
         });
 

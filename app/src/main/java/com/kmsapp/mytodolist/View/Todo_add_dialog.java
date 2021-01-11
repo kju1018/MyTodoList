@@ -3,7 +3,6 @@ package com.kmsapp.mytodolist.View;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,14 +42,14 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private LocalDate selectDate;
     private LocalTime selectTime;
-    private String textViewDate = "", textViewTime = "", textViewRepeatDayK = "";
+    private String textViewDate = "", textViewTime = "", textViewRepeatDayK = "", textViewRepeatDayN = "";
 
     private int y, m, d, hour, min;
     private boolean isRepeat = false;
 
-    private String strSelectRepeatDayN = "";
 
-    private List strSelectRepeatDayEN = new ArrayList();
+    private List repeatDayEn = new ArrayList();
+    private List repeatDayKor = new ArrayList();
 
     public static Todo_add_dialog newInstance() {
         Todo_add_dialog fragment = new Todo_add_dialog();
@@ -92,7 +91,6 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         d = selectDate.getDayOfMonth();
         hour = 9;
         min = 0;
-
 
         textViewDate =  y + "년 " + m + "월 " + d + "일" ;
         todo_add_date.setText(textViewDate);
@@ -180,7 +178,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo.setDate(strSelectDate);
         todo.setRepeat(isRepeat);
         todo.setRepeatComplete("notComplete");
-        todo.setRepeatDay(null);
+        todo.setRepeatDayKor(null);
         todo.setRepeatDayEn(null);
 
         if(selectTime != null){
@@ -198,18 +196,12 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         Todo todo = new Todo();
         String content = todo_add_content.getText().toString();
 
-        List repeatDay = new ArrayList();
-
-        for (int i = 0; i < strSelectRepeatDayN.length(); i++) {
-            repeatDay.add(String.valueOf(strSelectRepeatDayN.charAt(i)));
-        }
-
         todo.setContents(content);
         todo.setDate(null);
         todo.setRepeat(isRepeat);
         todo.setRepeatComplete("notComplete");
-        todo.setRepeatDay(repeatDay);
-        todo.setRepeatDayEn(strSelectRepeatDayEN);
+        todo.setRepeatDayEn(repeatDayEn);
+        todo.setRepeatDayKor(repeatDayKor);
 
         if(selectTime != null){
             String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
@@ -240,32 +232,32 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private void selectRepeat() {
 
-        if(strSelectRepeatDayN.length() == 0) {
+        if(textViewRepeatDayN.length() == 0) {
             repeat_dialog = Repeat_Dialog.newInstance();
         }else {
-            repeat_dialog = Repeat_Dialog.newInstance(strSelectRepeatDayN);
+            repeat_dialog = Repeat_Dialog.newInstance(textViewRepeatDayN);
         }
         repeat_dialog.setRepeat_listener(new Repeat_Listener() {
             @Override
-            public void loadDay(String dayNumber, String dayKor, List dayEn, SparseBooleanArray checkedItems) {
+            public void loadDay(String strDayNumber, String strDayKor, List dayEn, List dayKor, SparseBooleanArray checkedItems) {
                 isRepeat = true;
                 todo_add_repeat_off.setVisibility(View.GONE);
                 todo_add_repeat_on.setVisibility(View.VISIBLE);
                 todo_add_calendar_off.setVisibility(View.VISIBLE);
                 todo_add_calendar_on.setVisibility(View.GONE);
 
-                strSelectRepeatDayN = dayNumber;//123
-                textViewRepeatDayK = dayKor;//월화수
-                strSelectRepeatDayEN = dayEn;
-
-                Log.d("asdf", "loadDay: " + strSelectRepeatDayEN.toString());
+                textViewRepeatDayN = strDayNumber;//123
+                textViewRepeatDayK = strDayKor;//월화수
+                repeatDayEn = dayEn;
+                repeatDayKor = dayKor;
 
                 if(textViewRepeatDayK.length() == 0) {
                     isRepeat = false;
                     todo_add_date.setText(textViewDate);
                     todo_add_repeat_off.setVisibility(View.VISIBLE);
                     todo_add_repeat_on.setVisibility(View.GONE);
-                    strSelectRepeatDayEN.clear();
+                    repeatDayEn.clear();
+                    repeatDayKor.clear();
                 }
                 else
                     todo_add_date.setText(textViewRepeatDayK);
