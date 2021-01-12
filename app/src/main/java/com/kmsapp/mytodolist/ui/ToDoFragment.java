@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.View;
+package com.kmsapp.mytodolist.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.kmsapp.mytodolist.R;
+import com.kmsapp.mytodolist.ui.activity.Todo_CompleteActivity;
+import com.kmsapp.mytodolist.ui.activity.Todo_TodayActivity;
 
 
 public class ToDoFragment extends Fragment {

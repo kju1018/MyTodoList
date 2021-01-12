@@ -11,7 +11,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.SetOptions;
 import com.kmsapp.mytodolist.ID.TodoID;
 import com.kmsapp.mytodolist.Interface.UserView;
-import com.kmsapp.mytodolist.Model.Todo;
+import com.kmsapp.mytodolist.model.Todo;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class FireBasePresenter {
-    private FirebaseFirestore mStore;
+public class FireBaseRepository {
+    private FirebaseFirestore db;
     private UserView userView;
     private String TAG  =  "asdf";
 
@@ -29,33 +29,19 @@ public class FireBasePresenter {
 
     private String strToday = "";
 
-    public FireBasePresenter() {
-        mStore = FirebaseFirestore.getInstance();
+    public FireBaseRepository() {
+        db = FirebaseFirestore.getInstance();
     }
 
     public void setUserView(UserView userView) {
         this.userView = userView;
     }
 
-    public void TodoUpload(Todo todo){
-        userView.loadingStart();
-        String getid = mStore.collection("test").document().getId();
-        todo.setTodoId(getid);
-        todo.setTimestamp(FieldValue.serverTimestamp());
 
-        mStore.collection("test").document(getid).set(todo, SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    userView.showComplete("추가 완료");
-                    userView.loadingEnd();
-                }).addOnFailureListener(e -> {
-            userView.showLoadError("할 일 추가 오류");
-            userView.loadingEnd();
-        });
-    }
-
-    public MutableLiveData<ArrayList<Todo>> TodayTodoLoad(){
-        userView.loadingStart();
-        mStore.collection("test").addSnapshotListener((value, error) -> {
+    public MutableLiveData<ArrayList<Todo>> todayTodoLoad(){
+        Log.d(TAG, "todayTodoLoad: ");
+//        userView.loadingStart();
+        db.collection("test").addSnapshotListener((value, error) -> {
             if (value != null){
                 datas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
@@ -92,16 +78,17 @@ public class FireBasePresenter {
                         }
                     }
                 }
+                Log.d(TAG, "todayTodoLoad: "+ datas.size());
                 todoDatas.setValue(datas);
+                Log.d(TAG, "todayTodoLoad: "+ todoDatas.getValue().size());
             }
         });
-        userView.loadingEnd();
+//        userView.loadingEnd();
         return todoDatas;
     }
 
-    public MutableLiveData<ArrayList<Todo>> CompleteTodoLoad(){
-        userView.loadingStart();
-        mStore.collection("complete")
+    public MutableLiveData<ArrayList<Todo>> completeTodoLoad(){
+        db.collection("complete")
                 .orderBy(TodoID.timestamp, Query.Direction.DESCENDING).addSnapshotListener((value, error) -> {
             if (value != null){
                 datas.clear();
@@ -129,22 +116,37 @@ public class FireBasePresenter {
             }
 
         });
-        userView.loadingEnd();
         return todoDatas;
+    }
+
+    public void todoUpload(Todo todo){
+        userView.loadingStart();
+        String getid = db.collection("test").document().getId();
+        todo.setTodoId(getid);
+        todo.setTimestamp(FieldValue.serverTimestamp());
+
+        db.collection("test").document(getid).set(todo, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    userView.showComplete("추가 완료");
+                    userView.loadingEnd();
+                }).addOnFailureListener(e -> {
+            userView.showLoadError("할 일 추가 오류");
+            userView.loadingEnd();
+        });
     }
 
 
 
-    public void TodoComplete(Todo todo){
+    public void todoComplete(Todo todo){
         userView.loadingStart();
-        String getid = mStore.collection("complete").document().getId();
+        String getid = db.collection("complete").document().getId();
         todo.setCompleteId(getid);
         todo.setTimestamp(FieldValue.serverTimestamp());
         if(todo.isRepeat()) {// 습관이라면
             todo.setRepeatComplete(strToday);
             todo.setDate(strToday);
 
-            mStore.collection("test").document(todo.getTodoId()).set(todo, SetOptions.merge())
+            db.collection("test").document(todo.getTodoId()).set(todo, SetOptions.merge())
                     .addOnFailureListener(e -> {
                         userView.showLoadError("다시 시도해 주세요!");
                         userView.loadingEnd();
@@ -152,14 +154,14 @@ public class FireBasePresenter {
         }
 
         else {
-            mStore.collection("test").document(todo.getTodoId()).delete()
+            db.collection("test").document(todo.getTodoId()).delete()
                     .addOnFailureListener(e -> {
                         userView.showLoadError("다시 시도해 주세요!");
                         userView.loadingEnd();
                     });
         }
 
-        mStore.collection("complete").document(getid).set(todo, SetOptions.merge())
+        db.collection("complete").document(getid).set(todo, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     userView.showComplete("할 일 완료");
                     userView.loadingEnd();

@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.View;
+package com.kmsapp.mytodolist.ui.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +11,9 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kmsapp.mytodolist.R;
+import com.kmsapp.mytodolist.ui.CalendarFragment;
+import com.kmsapp.mytodolist.ui.SettingFragment;
+import com.kmsapp.mytodolist.ui.ToDoFragment;
 
 public class MainActivity extends AppCompatActivity {
 

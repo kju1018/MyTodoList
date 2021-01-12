@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.Model;
+package com.kmsapp.mytodolist.model;
 
 import com.google.firebase.firestore.FieldValue;
 

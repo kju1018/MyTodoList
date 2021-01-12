@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.View;
+package com.kmsapp.mytodolist.ui;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -20,7 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
-import com.kmsapp.mytodolist.Model.Todo;
+import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
 
 import java.time.LocalDate;
@@ -185,7 +185,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
             String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
             todo.setTime(strSelectTime);
         }else{
-            todo.setTime(null);
+            todo.setTime(textViewTime);
         }
 
         add_todoListener.save(todo);
@@ -207,7 +207,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
             String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
             todo.setTime(strsSelectTime);
         }else{
-            todo.setTime(null);
+            todo.setTime(textViewTime);
         }
 
         add_todoListener.save(todo);

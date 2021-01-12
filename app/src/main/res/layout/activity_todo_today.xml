@@ -1,48 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".View.Todo_TodayActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/toolbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/today_recycler"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:layout_below="@id/include"/>
+        tools:context=".ui.activity.Todo_TodayActivity">
 
-    <ProgressBar
-        android:id="@+id/todo_today_progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:indeterminateTint="#0EB0FF"
-        android:layout_alignTop="@id/today_recycler"
-        android:visibility="gone"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/todo_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="#1565C0"
-        android:clickable="true"
-        app:borderWidth="0dp"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/add_24"
-        android:layout_alignBottom="@id/today_recycler"
-        android:layout_alignRight="@id/today_recycler"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/today_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="오늘 할 일" />
 
-</RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/today_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/today_toolbar"/>
+
+        <ProgressBar
+            android:id="@+id/todo_today_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:indeterminateTint="#0EB0FF"
+            android:layout_alignTop="@id/today_recycler"
+            android:visibility="gone"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/todo_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1565C0"
+            android:clickable="true"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/add_24"
+            android:layout_alignBottom="@id/today_recycler"
+            android:layout_alignRight="@id/today_recycler"/>
+
+    </RelativeLayout>
+
+</layout>

@@ -5,4 +5,5 @@ public interface UserView {
     void showComplete(String message);
     void loadingStart();
     void loadingEnd();
+
 }

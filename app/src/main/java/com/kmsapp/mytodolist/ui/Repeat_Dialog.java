@@ -1,23 +1,17 @@
-package com.kmsapp.mytodolist.View;
+package com.kmsapp.mytodolist.ui;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
-import android.os.Parcelable;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.android.material.internal.ParcelableSparseBooleanArray;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
 import com.kmsapp.mytodolist.R;
 
