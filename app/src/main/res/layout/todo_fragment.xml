@@ -1,110 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.ToDoFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
 
-    <LinearLayout
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        tools:context=".ui.fragment.ToDoFragment">
 
 
         <LinearLayout
-            android:id="@+id/todo_today"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/check_24"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="오늘 할 일"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:layout_marginLeft="4dp" />
+            <LinearLayout
+                android:id="@+id/todo_today"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/check_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="오늘 할 일"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="4dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/todo_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/double_check" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="전체 할 일"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="4dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/todo_repeat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/repeat_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="습관"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="4dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/todo_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="?attr/selectableItemBackground">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/complete_24" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="완료"
+                    android:textSize="24sp"
+                    android:gravity="center"
+                    android:layout_marginLeft="4dp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/todo_all"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/double_check"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="전체 할 일"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:layout_marginLeft="4dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/todo_habit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/repeat_24"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="습관"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:layout_marginLeft="4dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/todo_complete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:background="?attr/selectableItemBackground">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/complete_24"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="완료"
-                android:textSize="24sp"
-                android:gravity="center"
-                android:layout_marginLeft="4dp" />
-
-        </LinearLayout>
-
-
-
-
-
-
-    </LinearLayout>
-
-</FrameLayout>
+    </FrameLayout>
+</layout>

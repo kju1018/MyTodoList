@@ -15,7 +15,7 @@ import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.ui.Todo_add_dialog;
-import com.kmsapp.mytodolist.ViewModel.Todo_Today_ViewModel;
+import com.kmsapp.mytodolist.ui.viewModel.Todo_Today_ViewModel;
 import com.kmsapp.mytodolist.databinding.ActivityTodoTodayBinding;
 
 public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener, UserView {

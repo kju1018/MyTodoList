@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.ViewModel;
+package com.kmsapp.mytodolist.ui.viewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

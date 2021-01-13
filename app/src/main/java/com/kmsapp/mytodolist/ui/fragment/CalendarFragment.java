@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.ui;
+package com.kmsapp.mytodolist.ui.fragment;
 
 import android.os.Bundle;
 

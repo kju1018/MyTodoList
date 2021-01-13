@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activity.Todo_RepeatActivity">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/repeat_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="습관" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/repeat_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_below="@id/repeat_toolbar"/>
+
+        <ProgressBar
+            android:id="@+id/todo_repeat_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:indeterminateTint="#0EB0FF"
+            android:layout_alignTop="@id/repeat_recycler"
+            android:visibility="gone"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/todo_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#1565C0"
+            android:clickable="true"
+            app:borderWidth="0dp"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/add_24"
+            android:layout_alignBottom="@id/repeat_recycler"
+            android:layout_alignRight="@id/repeat_recycler"/>
+
+    </RelativeLayout>
+
+</layout>

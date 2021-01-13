@@ -1,25 +1,28 @@
-package com.kmsapp.mytodolist.ViewModel;
+package com.kmsapp.mytodolist.ui.viewModel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.kmsapp.mytodolist.model.Todo;
+import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.Repository.FireBaseRepository;
+import com.kmsapp.mytodolist.model.Todo;
 
 import java.util.ArrayList;
 
-public class Todo_Complete_ViewModel extends ViewModel {
+public class Todo_all_ViewModel extends ViewModel {
+
     private FireBaseRepository fireBaseRepository;
 
     MutableLiveData<ArrayList<Todo>> liveDatas;
 
-    public void init() {
+    public void init(UserView userView) {
         fireBaseRepository = new FireBaseRepository();
+        fireBaseRepository.setUserView(userView);
     }
 
-    public LiveData<ArrayList<Todo>> loadComplete(){
-        liveDatas = fireBaseRepository.completeTodoLoad();
+    public LiveData<ArrayList<Todo>> loadAllTodo(){
+        liveDatas = fireBaseRepository.allTodoLoad();
         return liveDatas;
     }
 

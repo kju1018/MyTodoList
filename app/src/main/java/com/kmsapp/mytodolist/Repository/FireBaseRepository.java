@@ -39,8 +39,7 @@ public class FireBaseRepository {
 
 
     public MutableLiveData<ArrayList<Todo>> todayTodoLoad(){
-        Log.d(TAG, "todayTodoLoad: ");
-//        userView.loadingStart();
+        userView.loadingStart();
         db.collection("test").addSnapshotListener((value, error) -> {
             if (value != null){
                 datas.clear();
@@ -59,63 +58,136 @@ public class FireBaseRepository {
                             String contents = (String) snap.get(TodoID.contents);
                             String date = (String) snap.get(TodoID.date);
                             boolean repeat = (boolean) snap.get(TodoID.repeat);
-
-                            List repeatDay = (ArrayList) snap.get(TodoID.repeatDay);
+                            List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
                             List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
                             String time = (String) snap.get(TodoID.time);
 
                             if (repeat) {
                                 if (repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))) {
-                                    todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDay, repeatDayEn);
+                                    todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
                                     datas.add(todo);
                                 }
                             } else {
                                 if (date.equals(strToday)) {
-                                    todo = new Todo(todoId, contents, date, time, false, repeatComplete, repeatDay, repeatDayEn);
+                                    todo = new Todo(todoId, contents, date, time, false, repeatComplete, repeatDayKor, repeatDayEn);
                                     datas.add(todo);
                                 }
                             }
                         }
                     }
                 }
-                Log.d(TAG, "todayTodoLoad: "+ datas.size());
                 todoDatas.setValue(datas);
-                Log.d(TAG, "todayTodoLoad: "+ todoDatas.getValue().size());
             }
         });
-//        userView.loadingEnd();
+        userView.loadingEnd();
         return todoDatas;
     }
 
-    public MutableLiveData<ArrayList<Todo>> completeTodoLoad(){
-        db.collection("complete")
-                .orderBy(TodoID.timestamp, Query.Direction.DESCENDING).addSnapshotListener((value, error) -> {
+    public MutableLiveData<ArrayList<Todo>> allTodoLoad() {
+        userView.loadingStart();
+        db.collection("test").addSnapshotListener((value, error) -> {
             if (value != null){
                 datas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                     if(documentSnapshot != null) {
                         Todo todo = null;
+                        LocalDate today = LocalDate.now();
+                        strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
                         Map<String, Object> snap = documentSnapshot.getData();
 
+                        String repeatComplete = (String) snap.get(TodoID.repeatComplete);
                         String todoId = (String) snap.get(TodoID.todoId);
                         String contents = (String) snap.get(TodoID.contents);
                         String date = (String) snap.get(TodoID.date);
                         boolean repeat = (boolean) snap.get(TodoID.repeat);
-                        String repeatComplete = (String) snap.get(TodoID.repeatComplete);
-                        String completeId = (String) snap.get(TodoID.completeId);
-
-                        List repeatDay = (ArrayList) snap.get(TodoID.repeatDay);
+                        List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
                         List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
                         String time = (String) snap.get(TodoID.time);
-                        Log.d(TAG, "CompleteTodoLoad: "+ contents);
-                        todo = new Todo(todoId, completeId, contents, date, time, repeat, repeatComplete, repeatDay, repeatDayEn);
-                        datas.add(todo);
+
+                        if (repeat) {
+                            if (repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))) {
+                                todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
+                                datas.add(todo);
+                            }
+                        } else {
+                                todo = new Todo(todoId, contents, date, time, false, repeatComplete, repeatDayKor, repeatDayEn);
+                                datas.add(todo);
+
+                        }
+
                     }
                 }
                 todoDatas.setValue(datas);
             }
-
         });
+        userView.loadingEnd();
+        return todoDatas;
+    }
+
+    public MutableLiveData<ArrayList<Todo>> repeatTodoLoad() {
+        userView.loadingStart();
+        db.collection("test")
+                .whereEqualTo(TodoID.repeat, true)
+                .addSnapshotListener((value, error) -> {
+                    if (value != null){
+                        datas.clear();
+                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                            if(documentSnapshot != null) {
+                                Todo todo = null;
+
+                                Map<String, Object> snap = documentSnapshot.getData();
+
+                                String todoId = (String) snap.get(TodoID.todoId);
+                                String contents = (String) snap.get(TodoID.contents);
+                                String repeatComplete = (String) snap.get(TodoID.repeatComplete);
+
+                                List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
+                                List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
+                                String time = (String) snap.get(TodoID.time);
+
+                                todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
+                                datas.add(todo);
+
+                            }
+                        }
+                        todoDatas.setValue(datas);
+                    }
+                });
+        userView.loadingEnd();
+        return todoDatas;
+    }
+
+    public MutableLiveData<ArrayList<Todo>> completeTodoLoad(){
+        db.collection("complete")
+                .orderBy(TodoID.timestamp, Query.Direction.DESCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (value != null){
+                        datas.clear();
+                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                            if(documentSnapshot != null) {
+                                Todo todo = null;
+                                Map<String, Object> snap = documentSnapshot.getData();
+
+                                String todoId = (String) snap.get(TodoID.todoId);
+                                String contents = (String) snap.get(TodoID.contents);
+                                String date = (String) snap.get(TodoID.date);
+                                boolean repeat = (boolean) snap.get(TodoID.repeat);
+                                String repeatComplete = (String) snap.get(TodoID.repeatComplete);
+                                String completeId = (String) snap.get(TodoID.completeId);
+
+                                List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
+                                List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
+                                String time = (String) snap.get(TodoID.time);
+                                Log.d(TAG, "CompleteTodoLoad: "+ contents);
+                                todo = new Todo(todoId, completeId, contents, date, time, repeat, repeatComplete, repeatDayKor, repeatDayEn);
+                                datas.add(todo);
+                            }
+                        }
+                        todoDatas.setValue(datas);
+                    }
+
+                });
         return todoDatas;
     }
 
@@ -170,6 +242,7 @@ public class FireBaseRepository {
             userView.loadingEnd();
         });
     }
+
 }
 
 

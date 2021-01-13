@@ -11,9 +11,9 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kmsapp.mytodolist.R;
-import com.kmsapp.mytodolist.ui.CalendarFragment;
+import com.kmsapp.mytodolist.ui.fragment.CalendarFragment;
 import com.kmsapp.mytodolist.ui.SettingFragment;
-import com.kmsapp.mytodolist.ui.ToDoFragment;
+import com.kmsapp.mytodolist.ui.fragment.ToDoFragment;
 
 public class MainActivity extends AppCompatActivity {
 

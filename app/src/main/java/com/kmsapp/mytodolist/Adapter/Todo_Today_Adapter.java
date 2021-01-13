@@ -1,6 +1,5 @@
 package com.kmsapp.mytodolist.Adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,8 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kmsapp.mytodolist.databinding.TodoViewBinding;
 import com.kmsapp.mytodolist.model.Todo;
-import com.kmsapp.mytodolist.databinding.TodoTodayViewBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,28 +39,30 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
     @Override
     public Todo_Today_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        TodoTodayViewBinding todoTodayViewBinding = TodoTodayViewBinding.inflate(layoutInflater, parent, false);
-        return new Todo_Today_ViewHolder(todoTodayViewBinding);
+        TodoViewBinding todoViewBinding = TodoViewBinding.inflate(layoutInflater, parent, false);
+        return new Todo_Today_ViewHolder(todoViewBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull Todo_Today_ViewHolder holder, int position) {
         Todo data = datas.get(position);
 
-        holder.todoTodayViewBinding.setTodo(data);
 
         if(data.isRepeat()) {
-            holder.todoTodayViewBinding.repeatImage.setVisibility(View.VISIBLE);
+            holder.todoViewBinding.repeatImage.setVisibility(View.VISIBLE);
         }else {
-            holder.todoTodayViewBinding.repeatImage.setVisibility(View.GONE);
+            holder.todoViewBinding.repeatImage.setVisibility(View.GONE);
         }
 
-        holder.todoTodayViewBinding.todoTodayCheck.setOnClickListener(view ->{
-            holder.todoTodayViewBinding.todoTodayCheck.setChecked(false);
+        holder.todoViewBinding.todoContent.setText(data.getContents());
+        holder.todoViewBinding.todoDatetime.setText(data.getTime());
+
+        holder.todoViewBinding.todoCheck.setOnClickListener(view ->{
+            holder.todoViewBinding.todoCheck.setChecked(false);
             listener.checkBoxClick(data);
         });
-        holder.todoTodayViewBinding.todoTodayLinear.setOnClickListener(view -> {
-            holder.todoTodayViewBinding.repeatImage.setVisibility(View.GONE);
+        holder.todoViewBinding.todoLinear.setOnClickListener(view -> {
+            holder.todoViewBinding.repeatImage.setVisibility(View.GONE);
             listener.onItemClick(data);
         });
 
@@ -75,11 +76,11 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
 
     public class Todo_Today_ViewHolder extends RecyclerView.ViewHolder {
 
-        private TodoTodayViewBinding todoTodayViewBinding;
+        private TodoViewBinding todoViewBinding;
 
-        public Todo_Today_ViewHolder(@NonNull TodoTodayViewBinding todoTodayViewBinding) {
-            super(todoTodayViewBinding.getRoot());
-            this.todoTodayViewBinding = todoTodayViewBinding;
+        public Todo_Today_ViewHolder(@NonNull TodoViewBinding todoViewBinding) {
+            super(todoViewBinding.getRoot());
+            this.todoViewBinding = todoViewBinding;
         }
     }
 }

@@ -3,11 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CalendarFragment">
+    tools:context=".ui.fragment.CalendarFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="캘린더" />
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
