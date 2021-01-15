@@ -6,14 +6,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
-import com.kmsapp.mytodolist.Adapter.Todo_Complete_Adapter;
+import com.kmsapp.mytodolist.ui.Adapter.Todo_Complete_Adapter;
 import com.kmsapp.mytodolist.databinding.ActivityTodoCompleteBinding;
-import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_Complete_ViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Todo_CompleteActivity extends AppCompatActivity {
 

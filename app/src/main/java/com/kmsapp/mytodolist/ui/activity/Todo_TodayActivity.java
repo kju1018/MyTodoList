@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.kmsapp.mytodolist.Adapter.Todo_Today_Adapter;
+import com.kmsapp.mytodolist.ui.Adapter.Todo_Today_Adapter;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.model.Todo;
@@ -63,8 +63,7 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
         });
 
         activityTodoTodayBinding.todoAdd.setOnClickListener(view -> {
-            todo_add_dialog = Todo_add_dialog.newInstance();
-            todo_add_dialog.setAdd_todoListener(Todo_TodayActivity.this);
+            todo_add_dialog = Todo_add_dialog.newInstance(this);
             FragmentManager fm = getSupportFragmentManager();
             todo_add_dialog.show(fm, "todo_add_dialog");
         });

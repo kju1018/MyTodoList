@@ -27,8 +27,8 @@ public class Repeat_Dialog extends DialogFragment {
     private Button cancle, confirm;
 
     private ArrayAdapter<String> arrayAdapter;
-    private List dayotweek = new ArrayList();
-    private List dayotweekEn = new ArrayList();
+    private ArrayList dayotweek = new ArrayList();
+    private ArrayList dayotweekEn = new ArrayList();
 
     private Repeat_Listener repeat_listener;
     private String checked = "";
@@ -38,13 +38,15 @@ public class Repeat_Dialog extends DialogFragment {
 
     }
 
-    public static Repeat_Dialog newInstance() {
+    public static Repeat_Dialog newInstance(Repeat_Listener repeat_listener) {
         Repeat_Dialog fragment = new Repeat_Dialog();
+        fragment.setRepeat_listener(repeat_listener);
         return fragment;
     }
 
-    public static Repeat_Dialog newInstance(String checkN) {
+    public static Repeat_Dialog newInstance(Repeat_Listener repeat_listener, String checkN) {
         Repeat_Dialog fragment = new Repeat_Dialog();
+        fragment.setRepeat_listener(repeat_listener);
         Bundle args = new Bundle();
         args.putString(CHECKED, checkN);
         fragment.setArguments(args);

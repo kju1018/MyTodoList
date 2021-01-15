@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.ui.fragment.CalendarFragment;
-import com.kmsapp.mytodolist.ui.SettingFragment;
+import com.kmsapp.mytodolist.ui.fragment.SettingFragment;
 import com.kmsapp.mytodolist.ui.fragment.ToDoFragment;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.m_toolbar);
 
         toolbar.setTitle("Todo List");
-
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, toDoFragment).commit();
 

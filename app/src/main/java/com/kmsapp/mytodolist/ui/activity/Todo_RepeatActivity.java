@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import android.os.Bundle;
 import android.view.View;
 
-import com.kmsapp.mytodolist.Adapter.Todo_Repeat_Adapter;
+import com.kmsapp.mytodolist.ui.Adapter.Todo_Repeat_Adapter;
 import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.databinding.ActivityTodoRepeatBinding;

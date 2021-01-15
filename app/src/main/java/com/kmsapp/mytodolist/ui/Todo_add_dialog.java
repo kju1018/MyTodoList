@@ -22,6 +22,7 @@ import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
+import com.kmsapp.mytodolist.ui.activity.Todo_TodayActivity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -51,8 +52,9 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
     private List repeatDayEn = new ArrayList();
     private List repeatDayKor = new ArrayList();
 
-    public static Todo_add_dialog newInstance() {
+    public static Todo_add_dialog newInstance(Add_todoListener listener) {
         Todo_add_dialog fragment = new Todo_add_dialog();
+        fragment.setAdd_todoListener(listener);
         return fragment;
     }
 
@@ -82,7 +84,6 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo_add_time_reset = view.findViewById(R.id.todo_add_time_reset);
 
         todo_add_save = view.findViewById(R.id.todo_add_save);
-
         selectDate = LocalDate.now();//오늘날짜
         selectTime = null;
 
@@ -174,12 +175,13 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         String content = todo_add_content.getText().toString();
         String strSelectDate = LocalDate.of(selectDate.getYear(), selectDate.getMonthValue(), selectDate.getDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+        todo.setCompleteId("");
         todo.setContents(content);
         todo.setDate(strSelectDate);
         todo.setRepeat(isRepeat);
         todo.setRepeatComplete("notComplete");
-        todo.setRepeatDayKor(null);
-        todo.setRepeatDayEn(null);
+        todo.setRepeatDayKor(new ArrayList());
+        todo.setRepeatDayEn(new ArrayList());
 
         if(selectTime != null){
             String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
@@ -196,8 +198,9 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         Todo todo = new Todo();
         String content = todo_add_content.getText().toString();
 
+        todo.setCompleteId("");
         todo.setContents(content);
-        todo.setDate(null);
+        todo.setDate("");
         todo.setRepeat(isRepeat);
         todo.setRepeatComplete("notComplete");
         todo.setRepeatDayEn(repeatDayEn);
@@ -232,12 +235,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private void selectRepeat() {
 
-        if(textViewRepeatDayN.length() == 0) {
-            repeat_dialog = Repeat_Dialog.newInstance();
-        }else {
-            repeat_dialog = Repeat_Dialog.newInstance(textViewRepeatDayN);
-        }
-        repeat_dialog.setRepeat_listener(new Repeat_Listener() {
+        Repeat_Listener repeat_listener = new Repeat_Listener() {
             @Override
             public void loadDay(String strDayNumber, String strDayKor, List dayEn, List dayKor, SparseBooleanArray checkedItems) {
                 isRepeat = true;
@@ -262,7 +260,13 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
                 else
                     todo_add_date.setText(textViewRepeatDayK);
             }
-        });
+        };
+
+        if(textViewRepeatDayN.length() == 0) {
+            repeat_dialog = Repeat_Dialog.newInstance(repeat_listener);
+        }else {
+            repeat_dialog = Repeat_Dialog.newInstance(repeat_listener, textViewRepeatDayN);
+        }
         repeat_dialog.show(getFragmentManager(),"repeat_dialog");
     }
 

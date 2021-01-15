@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,31 +46,19 @@ public class FireBaseRepository {
                 datas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                     if(documentSnapshot != null) {
-                        Todo todo = null;
+                        Todo todo = documentSnapshot.toObject(Todo.class);
                         LocalDate today = LocalDate.now();
                         strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-                        Map<String, Object> snap = documentSnapshot.getData();
-
-                        String repeatComplete = (String) snap.get(TodoID.repeatComplete);
-
+                        String repeatComplete = todo.getRepeatComplete();
+                        Log.d(TAG, "todayTodoLoad: "+ repeatComplete);
                         if(!repeatComplete.equals(strToday)){
-                            String todoId = (String) snap.get(TodoID.todoId);
-                            String contents = (String) snap.get(TodoID.contents);
-                            String date = (String) snap.get(TodoID.date);
-                            boolean repeat = (boolean) snap.get(TodoID.repeat);
-                            List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
-                            List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
-                            String time = (String) snap.get(TodoID.time);
-
-                            if (repeat) {
-                                if (repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))) {
-                                    todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
+                            if (todo.isRepeat()) {
+                                if ((todo.getRepeatDayEn()).contains(String.valueOf(today.getDayOfWeek()))) {
                                     datas.add(todo);
                                 }
                             } else {
-                                if (date.equals(strToday)) {
-                                    todo = new Todo(todoId, contents, date, time, false, repeatComplete, repeatDayKor, repeatDayEn);
+                                if (todo.getDate().equals(strToday)) {
                                     datas.add(todo);
                                 }
                             }
@@ -90,32 +79,8 @@ public class FireBaseRepository {
                 datas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                     if(documentSnapshot != null) {
-                        Todo todo = null;
-                        LocalDate today = LocalDate.now();
-                        strToday = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-
-                        Map<String, Object> snap = documentSnapshot.getData();
-
-                        String repeatComplete = (String) snap.get(TodoID.repeatComplete);
-                        String todoId = (String) snap.get(TodoID.todoId);
-                        String contents = (String) snap.get(TodoID.contents);
-                        String date = (String) snap.get(TodoID.date);
-                        boolean repeat = (boolean) snap.get(TodoID.repeat);
-                        List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
-                        List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
-                        String time = (String) snap.get(TodoID.time);
-
-                        if (repeat) {
-                            if (repeatDayEn.contains(String.valueOf(today.getDayOfWeek()))) {
-                                todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
-                                datas.add(todo);
-                            }
-                        } else {
-                                todo = new Todo(todoId, contents, date, time, false, repeatComplete, repeatDayKor, repeatDayEn);
-                                datas.add(todo);
-
-                        }
-
+                        Todo todo = documentSnapshot.toObject(Todo.class);
+                        datas.add(todo);
                     }
                 }
                 todoDatas.setValue(datas);
@@ -126,6 +91,7 @@ public class FireBaseRepository {
     }
 
     public MutableLiveData<ArrayList<Todo>> repeatTodoLoad() {
+
         userView.loadingStart();
         db.collection("test")
                 .whereEqualTo(TodoID.repeat, true)
@@ -134,19 +100,7 @@ public class FireBaseRepository {
                         datas.clear();
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                             if(documentSnapshot != null) {
-                                Todo todo = null;
-
-                                Map<String, Object> snap = documentSnapshot.getData();
-
-                                String todoId = (String) snap.get(TodoID.todoId);
-                                String contents = (String) snap.get(TodoID.contents);
-                                String repeatComplete = (String) snap.get(TodoID.repeatComplete);
-
-                                List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
-                                List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
-                                String time = (String) snap.get(TodoID.time);
-
-                                todo = new Todo(todoId, contents, "", time, true, repeatComplete, repeatDayKor, repeatDayEn);
+                                Todo todo = documentSnapshot.toObject(Todo.class);
                                 datas.add(todo);
 
                             }
@@ -166,21 +120,7 @@ public class FireBaseRepository {
                         datas.clear();
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                             if(documentSnapshot != null) {
-                                Todo todo = null;
-                                Map<String, Object> snap = documentSnapshot.getData();
-
-                                String todoId = (String) snap.get(TodoID.todoId);
-                                String contents = (String) snap.get(TodoID.contents);
-                                String date = (String) snap.get(TodoID.date);
-                                boolean repeat = (boolean) snap.get(TodoID.repeat);
-                                String repeatComplete = (String) snap.get(TodoID.repeatComplete);
-                                String completeId = (String) snap.get(TodoID.completeId);
-
-                                List repeatDayKor = (ArrayList) snap.get(TodoID.repeatDayKor);
-                                List repeatDayEn = (ArrayList) snap.get(TodoID.repeatDayEn);
-                                String time = (String) snap.get(TodoID.time);
-                                Log.d(TAG, "CompleteTodoLoad: "+ contents);
-                                todo = new Todo(todoId, completeId, contents, date, time, repeat, repeatComplete, repeatDayKor, repeatDayEn);
+                                Todo todo = documentSnapshot.toObject(Todo.class);
                                 datas.add(todo);
                             }
                         }
@@ -195,7 +135,7 @@ public class FireBaseRepository {
         userView.loadingStart();
         String getid = db.collection("test").document().getId();
         todo.setTodoId(getid);
-        todo.setTimestamp(FieldValue.serverTimestamp());
+        todo.setTimestamp(Timestamp.now());
 
         db.collection("test").document(getid).set(todo, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
@@ -213,7 +153,7 @@ public class FireBaseRepository {
         userView.loadingStart();
         String getid = db.collection("complete").document().getId();
         todo.setCompleteId(getid);
-        todo.setTimestamp(FieldValue.serverTimestamp());
+        todo.setTimestamp(Timestamp.now());
         if(todo.isRepeat()) {// 습관이라면
             todo.setRepeatComplete(strToday);
             todo.setDate(strToday);

@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.Adapter;
+package com.kmsapp.mytodolist.ui.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

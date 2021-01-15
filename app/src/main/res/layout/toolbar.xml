@@ -11,7 +11,8 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/m_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,6 +25,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="My TodoList"
+                    android:textColor="@color/black"
                     android:textSize="20sp"/>
 
 
