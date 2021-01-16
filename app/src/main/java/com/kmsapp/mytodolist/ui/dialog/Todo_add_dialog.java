@@ -1,4 +1,4 @@
-package com.kmsapp.mytodolist.ui;
+package com.kmsapp.mytodolist.ui.dialog;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -22,7 +22,6 @@ import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
-import com.kmsapp.mytodolist.ui.activity.Todo_TodayActivity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -218,7 +217,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
     }
 
     private void selectTimeSetting() {
-        TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+        TimePickerDialog dialog = new TimePickerDialog(getActivity(),R.style.DialogTheme, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 hour = i;
@@ -271,8 +270,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
     }
 
     private void selectDate() {
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),R.style.DialogTheme,  new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                 isRepeat = false;
@@ -289,7 +287,6 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
             }
         }, y, m - 1, d);
-
         datePickerDialog.show();
     }
 

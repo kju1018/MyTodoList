@@ -31,12 +31,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_nov);
-        toolbar = findViewById(R.id.m_toolbar);
-
-        toolbar.setTitle("Todo List");
 
         getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, toDoFragment).commit();
-
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

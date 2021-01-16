@@ -14,9 +14,10 @@ import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.UserView;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
-import com.kmsapp.mytodolist.ui.Todo_add_dialog;
+import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_Today_ViewModel;
 import com.kmsapp.mytodolist.databinding.ActivityTodoTodayBinding;
+import com.kmsapp.mytodolist.utils.ToastUtil;
 
 public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener, UserView {
 
@@ -72,12 +73,12 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
 
     @Override
     public void showLoadError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ToastUtil.toastPrint(this, message);
     }
 
     @Override
     public void showComplete(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        ToastUtil.toastPrint(this, message);
     }
 
     @Override

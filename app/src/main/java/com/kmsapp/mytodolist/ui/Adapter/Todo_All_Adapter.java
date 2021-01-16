@@ -24,6 +24,8 @@ public class Todo_All_Adapter extends RecyclerView.Adapter<Todo_All_Adapter.Todo
         this.datas = datas;
     }
 
+   
+
     @NonNull
     @Override
     public Todo_All_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

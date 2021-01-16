@@ -2,31 +2,38 @@ package com.kmsapp.mytodolist.Repository;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import com.applandeo.materialcalendarview.EventDay;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.kmsapp.mytodolist.ID.TodoID;
 import com.kmsapp.mytodolist.Interface.UserView;
+import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.model.Todo;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.Calendar;
 
 public class FireBaseRepository {
     private FirebaseFirestore db;
     private UserView userView;
     private String TAG  =  "asdf";
 
-    private ArrayList<Todo> datas = new ArrayList<>();
-    private MutableLiveData<ArrayList<Todo>> todoDatas = new MutableLiveData<>();
+    private ArrayList<Todo> todoDatas = new ArrayList<>();
+    private MutableLiveData<ArrayList<Todo>> todoLiveDatas = new MutableLiveData<>();
+    private ArrayList<EventDay> eventDatas = new ArrayList<>();
+    private MutableLiveData<ArrayList<EventDay>> eventLiveDatas = new MutableLiveData<>();
 
     private String strToday = "";
 
@@ -43,7 +50,7 @@ public class FireBaseRepository {
         userView.loadingStart();
         db.collection("test").addSnapshotListener((value, error) -> {
             if (value != null){
-                datas.clear();
+                todoDatas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                     if(documentSnapshot != null) {
                         Todo todo = documentSnapshot.toObject(Todo.class);
@@ -55,39 +62,39 @@ public class FireBaseRepository {
                         if(!repeatComplete.equals(strToday)){
                             if (todo.isRepeat()) {
                                 if ((todo.getRepeatDayEn()).contains(String.valueOf(today.getDayOfWeek()))) {
-                                    datas.add(todo);
+                                    todoDatas.add(todo);
                                 }
                             } else {
                                 if (todo.getDate().equals(strToday)) {
-                                    datas.add(todo);
+                                    todoDatas.add(todo);
                                 }
                             }
                         }
                     }
                 }
-                todoDatas.setValue(datas);
+                todoLiveDatas.setValue(todoDatas);
             }
         });
         userView.loadingEnd();
-        return todoDatas;
+        return todoLiveDatas;
     }
 
     public MutableLiveData<ArrayList<Todo>> allTodoLoad() {
         userView.loadingStart();
         db.collection("test").addSnapshotListener((value, error) -> {
             if (value != null){
-                datas.clear();
+                todoDatas.clear();
                 for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                     if(documentSnapshot != null) {
                         Todo todo = documentSnapshot.toObject(Todo.class);
-                        datas.add(todo);
+                        todoDatas.add(todo);
                     }
                 }
-                todoDatas.setValue(datas);
+                todoLiveDatas.setValue(todoDatas);
             }
         });
         userView.loadingEnd();
-        return todoDatas;
+        return todoLiveDatas;
     }
 
     public MutableLiveData<ArrayList<Todo>> repeatTodoLoad() {
@@ -97,19 +104,19 @@ public class FireBaseRepository {
                 .whereEqualTo(TodoID.repeat, true)
                 .addSnapshotListener((value, error) -> {
                     if (value != null){
-                        datas.clear();
+                        todoDatas.clear();
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                             if(documentSnapshot != null) {
                                 Todo todo = documentSnapshot.toObject(Todo.class);
-                                datas.add(todo);
+                                todoDatas.add(todo);
 
                             }
                         }
-                        todoDatas.setValue(datas);
+                        todoLiveDatas.setValue(todoDatas);
                     }
                 });
         userView.loadingEnd();
-        return todoDatas;
+        return todoLiveDatas;
     }
 
     public MutableLiveData<ArrayList<Todo>> completeTodoLoad(){
@@ -117,18 +124,18 @@ public class FireBaseRepository {
                 .orderBy(TodoID.timestamp, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (value != null){
-                        datas.clear();
+                        todoDatas.clear();
                         for(DocumentSnapshot documentSnapshot : value.getDocuments()){
                             if(documentSnapshot != null) {
                                 Todo todo = documentSnapshot.toObject(Todo.class);
-                                datas.add(todo);
+                                todoDatas.add(todo);
                             }
                         }
-                        todoDatas.setValue(datas);
+                        todoLiveDatas.setValue(todoDatas);
                     }
 
                 });
-        return todoDatas;
+        return todoLiveDatas;
     }
 
     public void todoUpload(Todo todo){
@@ -136,7 +143,7 @@ public class FireBaseRepository {
         String getid = db.collection("test").document().getId();
         todo.setTodoId(getid);
         todo.setTimestamp(Timestamp.now());
-
+        Log.d(TAG, "todoUpload: "+ strToday);
         db.collection("test").document(getid).set(todo, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> {
                     userView.showComplete("추가 완료");
@@ -183,6 +190,60 @@ public class FireBaseRepository {
         });
     }
 
+    public MutableLiveData<ArrayList<EventDay>> loadEvent() {
+        userView.loadingStart();
+        db.collection("test")
+                .whereEqualTo("repeat", false)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        eventDatas.clear();
+                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                            if(documentSnapshot != null) {
+                                Todo todo = documentSnapshot.toObject(Todo.class);
+                                LocalDate todoDate = LocalDate.parse(todo.getDate());
+                                Calendar calendar = Calendar.getInstance();
+                                calendar.set(todoDate.getYear(), todoDate.getMonthValue() - 1, todoDate.getDayOfMonth());
+
+                                EventDay eventDay = new EventDay(calendar, R.drawable.three_icons);
+                                eventDatas.add(eventDay);
+                            }
+                        }
+                        eventLiveDatas.setValue(eventDatas);
+                        userView.loadingEnd();
+                    }
+                });
+        Log.d(TAG, "loadEvent: " + eventDatas.size());
+
+        return eventLiveDatas;
+    }
+
+    public MutableLiveData<ArrayList<Todo>> loadSelectTodo(Calendar calendar) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String date = format.format(calendar.getTime());
+
+        Log.d(TAG, "loadSelectTodo: "+ date);
+        db.collection("test")
+                .whereEqualTo("date",date)
+                .whereEqualTo("repeat", false)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        todoDatas.clear();
+                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                            if(documentSnapshot != null) {
+                                Todo todo = documentSnapshot.toObject(Todo.class);
+                                todoDatas.add(todo);
+                            }
+                        }
+                        Log.d(TAG, "loadSelectTodo: "+ todoDatas.size());
+
+                        todoLiveDatas.setValue(todoDatas);
+                    }
+                });
+
+        return todoLiveDatas;
+    }
 }
 
 
