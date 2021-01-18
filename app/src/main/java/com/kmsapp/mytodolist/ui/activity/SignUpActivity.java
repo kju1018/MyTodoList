@@ -7,16 +7,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.kmsapp.mytodolist.Interface.UserView;
+import com.kmsapp.mytodolist.Interface.UserViewListener;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.Repository.FireAuthRepository;
 import com.kmsapp.mytodolist.databinding.ActivitySignUpBinding;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
-public class SignUpActivity extends AppCompatActivity implements UserView, TextWatcher {
+public class SignUpActivity extends AppCompatActivity implements UserViewListener, TextWatcher {
 
     private ActivitySignUpBinding activitySignUpBinding;
     private FireAuthRepository authRepository;

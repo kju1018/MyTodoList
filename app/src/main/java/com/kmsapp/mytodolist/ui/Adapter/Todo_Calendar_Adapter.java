@@ -41,7 +41,6 @@ public class Todo_Calendar_Adapter extends RecyclerView.Adapter<Todo_Calendar_Ad
         holder.todoViewBinding.todoDatetime.setText(data.getTime());
         holder.todoViewBinding.todoCheck.setVisibility(View.GONE);
 
-        Log.d("asdf", "onBindViewHolder: dfdf");
     }
 
     @Override

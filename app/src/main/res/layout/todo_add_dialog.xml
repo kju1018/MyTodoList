@@ -9,6 +9,7 @@
         android:id="@+id/todo_add_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:hint="일정 입력"
         android:textSize="20sp"
         android:textColor="@color/black"

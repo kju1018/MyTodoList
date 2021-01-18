@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kmsapp.mytodolist.Interface.OnItemClickListener;
 import com.kmsapp.mytodolist.databinding.TodoViewBinding;
 import com.kmsapp.mytodolist.model.Todo;
 
@@ -20,21 +21,20 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
 
 
     public Todo_Today_Adapter() {
-
     }
 
     public void setDatas(List<Todo> datas) {
         this.datas = datas;
     }
 
+    public List<Todo> getDatas() {
+        return datas;
+    }
+
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(Todo todo);
-        void checkBoxClick(Todo todo);
-    }
     @NonNull
     @Override
     public Todo_Today_ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,7 +46,6 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
     @Override
     public void onBindViewHolder(@NonNull Todo_Today_ViewHolder holder, int position) {
         Todo data = datas.get(position);
-
 
         if(data.isRepeat()) {
             holder.todoViewBinding.repeatImage.setVisibility(View.VISIBLE);
@@ -62,7 +61,6 @@ public class Todo_Today_Adapter extends RecyclerView.Adapter<Todo_Today_Adapter.
             listener.checkBoxClick(data);
         });
         holder.todoViewBinding.todoLinear.setOnClickListener(view -> {
-            holder.todoViewBinding.repeatImage.setVisibility(View.GONE);
             listener.onItemClick(data);
         });
 

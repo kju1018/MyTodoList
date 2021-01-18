@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kmsapp.mytodolist.Interface.OnItemClickListener;
 import com.kmsapp.mytodolist.databinding.TodoViewBinding;
 import com.kmsapp.mytodolist.model.Todo;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class Todo_All_Adapter extends RecyclerView.Adapter<Todo_All_Adapter.Todo_All_ViewHolder>{
 
     private List<Todo> datas = new ArrayList<>();
+    private OnItemClickListener listener;
 
     public Todo_All_Adapter() {
     }
@@ -24,7 +26,13 @@ public class Todo_All_Adapter extends RecyclerView.Adapter<Todo_All_Adapter.Todo
         this.datas = datas;
     }
 
-   
+    public List<Todo> getDatas() {
+        return datas;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
 
     @NonNull
     @Override
@@ -37,6 +45,8 @@ public class Todo_All_Adapter extends RecyclerView.Adapter<Todo_All_Adapter.Todo
     @Override
     public void onBindViewHolder(@NonNull Todo_All_ViewHolder holder, int position) {
         Todo data = datas.get(position);
+
+        holder.todoViewBinding.todoCheck.setVisibility(View.GONE);
 
         holder.todoViewBinding.todoContent.setText(data.getContents());
         String dateTime;

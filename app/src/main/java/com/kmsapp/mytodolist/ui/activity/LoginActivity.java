@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.kmsapp.mytodolist.Interface.UserView;
+import com.kmsapp.mytodolist.Interface.UserViewListener;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.Repository.FireAuthRepository;
 import com.kmsapp.mytodolist.databinding.ActivityLoginBinding;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
-public class LoginActivity extends AppCompatActivity implements UserView {
+public class LoginActivity extends AppCompatActivity implements UserViewListener {
 
     private ActivityLoginBinding activityLoginBinding;
     private FireAuthRepository authRepository;

@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private SettingFragment settingFragment = SettingFragment.newInstance();
     private CalendarFragment calendarFragment = CalendarFragment.newInstance();
 
-    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +39,15 @@ public class MainActivity extends AppCompatActivity {
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 switch (item.getItemId()){
                     case R.id.todofragment_item: {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, toDoFragment).commit();
+                        transaction.replace(R.id.content_layout, toDoFragment).commit();
                         break;
                     }
                     case R.id.calendar_item: {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, calendarFragment).commit();
+                        transaction.replace(R.id.content_layout, calendarFragment).commit();
                         break;
                     }
                     case R.id.settingfragment_item: {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.content_layout, settingFragment).commit();
+                        transaction.replace(R.id.content_layout, settingFragment).commit();
                         break;
                     }
                 }

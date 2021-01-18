@@ -7,16 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="sky">#55A5FF</color>
+    <color name="sky">#C5E0FF</color>
 
     <color name="skyblue">#7CC7E0</color>
     <color name="gray_text">#8E8E8E</color>
 
-    <array name="colorArray">
-        <item>@color/skyblue</item>
-        <item>#FDF4EA</item>
-        <item>#7CC135</item>
-        <item>#FFDDDD</item>
-        <item>#E2758C</item>
-    </array>
+    <color name="gray_line">#ABB3B3B3</color>
 </resources>

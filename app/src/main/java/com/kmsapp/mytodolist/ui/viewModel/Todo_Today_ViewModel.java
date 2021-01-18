@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.kmsapp.mytodolist.Interface.UserView;
+import com.kmsapp.mytodolist.Interface.UserViewListener;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.Repository.FireBaseRepository;
 
@@ -15,13 +15,13 @@ public class Todo_Today_ViewModel extends ViewModel {
 
     MutableLiveData<ArrayList<Todo>> liveDatas;
 
-    public void init(UserView userView) {
+    public void init(UserViewListener userViewListener) {
         fireBaseRepository = new FireBaseRepository();
-        fireBaseRepository.setUserView(userView);
+        fireBaseRepository.setUserViewListener(userViewListener);
+        liveDatas = fireBaseRepository.todayTodoLoad();
     }
 
     public LiveData<ArrayList<Todo>> loadTodayTodo(){
-        liveDatas = fireBaseRepository.todayTodoLoad();
         return liveDatas;
     }
 
@@ -33,4 +33,7 @@ public class Todo_Today_ViewModel extends ViewModel {
         fireBaseRepository.todoComplete(todo);
     }
 
+    public void deleteTodo(Todo todo) {
+        fireBaseRepository.deleteTodo(todo);
+    }
 }

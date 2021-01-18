@@ -6,6 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.kmsapp.mytodolist.R;
+import com.kmsapp.mytodolist.utils.FirebaseAuthUtil;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
 public class SplashActivity extends AppCompatActivity {
@@ -31,7 +33,8 @@ public class SplashActivity extends AppCompatActivity {
         hd.postDelayed(new Runnable() {
             @Override
             public void run() {
-                FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
+                FirebaseUser mUser = FirebaseAuthUtil.getUser();
+
                 Intent intent;
                 if(mUser != null){
                     intent = new Intent(SplashActivity.this, MainActivity.class);

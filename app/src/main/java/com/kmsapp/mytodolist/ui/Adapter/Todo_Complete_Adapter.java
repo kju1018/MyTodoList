@@ -46,6 +46,7 @@ public class Todo_Complete_Adapter extends RecyclerView.Adapter<Todo_Complete_Ad
         holder.todoViewBinding.todoDatetime.setText(dateTime);
 
         holder.todoViewBinding.todoCheck.setChecked(true);
+        holder.todoViewBinding.todoCheck.setEnabled(false);
     }
 
     @Override
@@ -60,7 +61,6 @@ public class Todo_Complete_Adapter extends RecyclerView.Adapter<Todo_Complete_Ad
         public Todo_Complete_ViewHolder(@NonNull TodoViewBinding todoViewBinding) {
             super(todoViewBinding.getRoot());
             this.todoViewBinding = todoViewBinding;
-
         }
     }
 }

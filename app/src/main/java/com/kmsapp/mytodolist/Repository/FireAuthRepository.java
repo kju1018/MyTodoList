@@ -7,17 +7,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.kmsapp.mytodolist.Interface.UserView;
+import com.kmsapp.mytodolist.Interface.UserViewListener;
+import com.kmsapp.mytodolist.utils.FirebaseAuthUtil;
 
 public class FireAuthRepository {
     private FirebaseAuth mAuth;
-    private UserView loginListenr;
+    private UserViewListener loginListenr;
 
-    public FireAuthRepository(UserView loginListenr) {
-        mAuth = FirebaseAuth.getInstance();
+    public FireAuthRepository(UserViewListener loginListenr) {
+        mAuth = FirebaseAuthUtil.getAuth();
         this.loginListenr = loginListenr;
     }
-
     public void firebaseSignUp(String email, String password){
         loginListenr.loadingStart();
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -25,9 +25,10 @@ public class FireAuthRepository {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            loginListenr.showComplete(user.getEmail() + "로 회원가입 완료");
-                            loginListenr.loadingEnd();
+                            if(FirebaseAuthUtil.getUser() != null) {
+                                loginListenr.showComplete(FirebaseAuthUtil.getUser().getEmail() + "로 회원가입 완료");
+                                loginListenr.loadingEnd();
+                            }
                         }else {
                             if(password.length() < 8){
                                 loginListenr.showLoadError("비밀번호를 8자리 이상 입력해주세요.");

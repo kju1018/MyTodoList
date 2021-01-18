@@ -1,5 +1,8 @@
 package com.kmsapp.mytodolist.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldValue;
 
@@ -7,7 +10,7 @@ import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Todo {
+public class Todo implements Parcelable {
     private String todoId;
     private String completeId;
     private String contents;
@@ -57,6 +60,30 @@ public class Todo {
     }
 
 
+    protected Todo(Parcel in) {
+        todoId = in.readString();
+        completeId = in.readString();
+        contents = in.readString();
+        date = in.readString();
+        time = in.readString();
+        isRepeat = in.readByte() != 0;
+        repeatComplete = in.readString();
+        repeatDayKor = in.createStringArrayList();
+        repeatDayEn = in.createStringArrayList();
+        timestamp = in.readParcelable(Timestamp.class.getClassLoader());
+    }
+
+    public static final Creator<Todo> CREATOR = new Creator<Todo>() {
+        @Override
+        public Todo createFromParcel(Parcel in) {
+            return new Todo(in);
+        }
+
+        @Override
+        public Todo[] newArray(int size) {
+            return new Todo[size];
+        }
+    };
 
     public String getTodoId() {
         return todoId;
@@ -151,5 +178,24 @@ public class Todo {
                 ", repeatDay=" + repeatDayKor +
                 ", repeatDayEn=" + repeatDayEn +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(todoId);
+        parcel.writeString(completeId);
+        parcel.writeString(contents);
+        parcel.writeString(date);
+        parcel.writeString(time);
+        parcel.writeByte((byte) (isRepeat ? 1 : 0));
+        parcel.writeString(repeatComplete);
+        parcel.writeStringList(repeatDayKor);
+        parcel.writeStringList(repeatDayEn);
+        parcel.writeParcelable(timestamp, i);
     }
 }
