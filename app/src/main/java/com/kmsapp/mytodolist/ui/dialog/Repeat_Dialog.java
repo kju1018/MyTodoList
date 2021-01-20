@@ -103,7 +103,7 @@ public class Repeat_Dialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
-                //TODO 일단은 스트링으로 넘겨주고 나중에 바꿔줌
+
                 String strDayNumber = "";
                 String strDayKor = "";
                 List dayEn = new ArrayList();

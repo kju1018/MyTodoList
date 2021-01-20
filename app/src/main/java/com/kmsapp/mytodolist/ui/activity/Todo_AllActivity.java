@@ -19,6 +19,7 @@ import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.databinding.ActivityTodoAllBinding;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.ui.Adapter.Todo_All_Adapter;
+import com.kmsapp.mytodolist.ui.dialog.Todo_Detail_dialog;
 import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_all_ViewModel;
 import com.kmsapp.mytodolist.utils.ToastUtil;
@@ -42,7 +43,9 @@ public class Todo_AllActivity extends AppCompatActivity implements Add_todoListe
         onItemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(Todo todo) {
-                //TODO 상세정보
+                Todo_Detail_dialog todo_detail_dialog = Todo_Detail_dialog.newInstance(todo);
+                FragmentManager fm = getSupportFragmentManager();
+                todo_detail_dialog.show(fm, "todo_detail_dialog");
             }
 
             @Override
@@ -114,4 +117,3 @@ public class Todo_AllActivity extends AppCompatActivity implements Add_todoListe
         todo_all_viewModel.todoUpload(todo);
     }
 }
-// TODO: 2021-01-18  설정페이지 변경, 푸시알림 구현, 수정페이지 구현

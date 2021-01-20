@@ -3,6 +3,7 @@ package com.kmsapp.mytodolist.ui.dialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.kmsapp.mytodolist.Interface.Add_todoListener;
 import com.kmsapp.mytodolist.Interface.Repeat_Listener;
+import com.kmsapp.mytodolist.Repository.FireBaseRepository;
 import com.kmsapp.mytodolist.model.Todo;
 import com.kmsapp.mytodolist.R;
 
@@ -45,7 +47,6 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
 
     private int y, m, d, hour, min;
     private boolean isRepeat = false;
-
 
     private List repeatDayEn = new ArrayList();
     private List repeatDayKor = new ArrayList();
@@ -171,7 +172,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo.setRepeatDayEn(new ArrayList());
 
         if(selectTime != null){
-            String strSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
+            String strSelectTime = selectTime.format(DateTimeFormatter.ofPattern("HH:mm"));
             todo.setTime(strSelectTime);
         }else{
             todo.setTime(textViewTime);
@@ -194,7 +195,7 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         todo.setRepeatDayKor(repeatDayKor);
 
         if(selectTime != null){
-            String strsSelectTime = LocalTime.of(selectTime.getHour(), selectTime.getMinute()).format(DateTimeFormatter.ofPattern("hh:mm"));
+            String strsSelectTime = selectTime.format(DateTimeFormatter.ofPattern("HH:mm"));
             todo.setTime(strsSelectTime);
         }else{
             todo.setTime(textViewTime);

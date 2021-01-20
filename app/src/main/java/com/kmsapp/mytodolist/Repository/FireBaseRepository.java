@@ -75,6 +75,7 @@ public class FireBaseRepository {
         userViewListener.loadingStart();
         LocalDate today = LocalDate.now();
         todoCollectionReference()
+                .whereNotEqualTo(TodoID.repeatComplete, strToday)
                 .addSnapshotListener((value, error) -> {
                     if (value != null){
                         todoDatas.clear();
@@ -82,16 +83,13 @@ public class FireBaseRepository {
                             if(documentSnapshot != null) {
                                 Todo todo = documentSnapshot.toObject(Todo.class);
 
-                                String repeatComplete = todo.getRepeatComplete();
-                                if(!repeatComplete.equals(strToday)){
-                                    if (todo.isRepeat()) {
-                                        if ((todo.getRepeatDayEn()).contains(String.valueOf(today.getDayOfWeek()))) {
-                                            todoDatas.add(todo);
-                                        }
-                                    } else {
-                                        if (todo.getDate().equals(strToday)) {
-                                            todoDatas.add(todo);
-                                        }
+                                if (todo.isRepeat()) {
+                                    if ((todo.getRepeatDayEn()).contains(String.valueOf(today.getDayOfWeek()))) {
+                                        todoDatas.add(todo);
+                                    }
+                                } else {
+                                    if (todo.getDate().equals(strToday)) {
+                                        todoDatas.add(todo);
                                     }
                                 }
                             }
@@ -171,7 +169,7 @@ public class FireBaseRepository {
             getid = todo.getTodoId();
         }else {
             Log.d(TAG, "todoUpload: "+"dddddfdfdf");
-           getid = todoCollectionReference()
+            getid = todoCollectionReference()
                     .document()
                     .getId();
         }
@@ -196,7 +194,7 @@ public class FireBaseRepository {
     public void todoComplete(Todo todo){
         userViewListener.loadingStart();
 
-        todo.setTimestamp(Timestamp.now());
+
         if(todo.isRepeat()) {// 습관이라면
             todo.setRepeatComplete(strToday);
             todo.setDate(strToday);
@@ -209,6 +207,7 @@ public class FireBaseRepository {
                         userViewListener.loadingEnd();
                     });
         } else {
+            todo.setTimestamp(Timestamp.now());
             todoCollectionReference()
                     .document(todo.getTodoId())
                     .delete()

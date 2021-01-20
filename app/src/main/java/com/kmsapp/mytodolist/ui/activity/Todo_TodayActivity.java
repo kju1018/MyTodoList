@@ -1,6 +1,7 @@
 package com.kmsapp.mytodolist.ui.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.ui.dialog.Todo_Detail_dialog;
 import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_Today_ViewModel;
+import com.kmsapp.mytodolist.utils.PushAlarmController;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
 public class Todo_TodayActivity extends AppCompatActivity implements Add_todoListener, UserViewListener {
@@ -51,6 +53,8 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
             @Override
             public void checkBoxClick(Todo todo) {
                 todo_today_viewModel.todoComplete(todo);
+                PushAlarmController pushAlarmController = new PushAlarmController();
+                pushAlarmController.cancelAlarm(todo, getApplicationContext());
             }
         };
 
@@ -91,6 +95,8 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
                 if(direction == ItemTouchHelper.LEFT){
                     todo_today_viewModel.deleteTodo(todo_today_adapter.getDatas().get(position));
                 }
+                PushAlarmController pushAlarmController = new PushAlarmController();
+                pushAlarmController.cancelAlarm(todo_today_adapter.getDatas().get(position), getApplicationContext());
             }
         };
     }
@@ -119,6 +125,11 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
     @Override
     public void save(Todo todo) {
         todo_today_viewModel.todoUpload(todo);
+        if(!todo.getTime().equals("알림 없음")){
+            PushAlarmController pushAlarmController = new PushAlarmController();
+            pushAlarmController.setAlarm(todo, getApplicationContext());
+        }
+//
     }
 
 }

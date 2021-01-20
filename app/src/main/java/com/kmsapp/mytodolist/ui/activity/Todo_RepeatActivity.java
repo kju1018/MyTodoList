@@ -19,6 +19,7 @@ import com.kmsapp.mytodolist.Interface.UserViewListener;
 import com.kmsapp.mytodolist.R;
 import com.kmsapp.mytodolist.databinding.ActivityTodoRepeatBinding;
 import com.kmsapp.mytodolist.ui.Adapter.Todo_Today_Adapter;
+import com.kmsapp.mytodolist.ui.dialog.Todo_Detail_dialog;
 import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_Repeat_ViewModel;
 import com.kmsapp.mytodolist.utils.ToastUtil;
@@ -43,7 +44,9 @@ public class Todo_RepeatActivity extends AppCompatActivity implements UserViewLi
         onItemClickListener = new OnItemClickListener() {
             @Override
             public void onItemClick(Todo todo) {
-
+                Todo_Detail_dialog todo_detail_dialog = Todo_Detail_dialog.newInstance(todo);
+                FragmentManager fm = getSupportFragmentManager();
+                todo_detail_dialog.show(fm, "todo_detail_dialog");
             }
 
             @Override

@@ -11,6 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTodoList">
+        <receiver
+            android:name=".receiver.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".ui.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,14 +32,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
+            android:windowSoftInputMode="adjustResize"></activity>
         <activity android:name=".ui.activity.Todo_AllActivity" />
         <activity android:name=".ui.activity.Todo_RepeatActivity" />
         <activity android:name=".ui.activity.Todo_CompleteActivity" />
         <activity android:name=".ui.activity.Todo_TodayActivity" />
-        <activity android:name=".ui.activity.MainActivity"></activity>
+        <activity android:name=".ui.activity.MainActivity" />
     </application>
 
 </manifest>

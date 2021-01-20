@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlarmManager;
 import android.os.Bundle;
 
 import com.kmsapp.mytodolist.ui.Adapter.Todo_Complete_Adapter;
@@ -34,6 +35,7 @@ public class Todo_CompleteActivity extends AppCompatActivity {
             todo_complete_adapter.setDatas(todos);
             todo_complete_adapter.notifyDataSetChanged();
         });
+
 
     }
 

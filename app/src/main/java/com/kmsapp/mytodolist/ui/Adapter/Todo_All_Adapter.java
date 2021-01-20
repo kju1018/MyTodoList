@@ -58,6 +58,9 @@ public class Todo_All_Adapter extends RecyclerView.Adapter<Todo_All_Adapter.Todo
             holder.todoViewBinding.repeatImage.setVisibility(View.GONE);
             dateTime = data.getDate() + " " + data.getTime();
         }
+        holder.todoViewBinding.todoLinear.setOnClickListener(view -> {
+            listener.onItemClick(data);
+        });
 
         holder.todoViewBinding.todoDatetime.setText(dateTime);
 
