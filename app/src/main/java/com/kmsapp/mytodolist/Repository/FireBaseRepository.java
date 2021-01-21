@@ -33,8 +33,6 @@ public class FireBaseRepository {
     private FirebaseFirestore db;
     private UserViewListener userViewListener;
     private FirebaseListener firebaseListener;
-    private String TAG  =  "asdf";
-
 
     private ArrayList<Todo> todoDatas = new ArrayList<>();
     private MutableLiveData<ArrayList<Todo>> todoLiveDatas = new MutableLiveData<>();
@@ -168,14 +166,12 @@ public class FireBaseRepository {
         if(todo.getTodoId() != null){
             getid = todo.getTodoId();
         }else {
-            Log.d(TAG, "todoUpload: "+"dddddfdfdf");
             getid = todoCollectionReference()
                     .document()
                     .getId();
         }
         todo.setTodoId(getid);
         todo.setTimestamp(Timestamp.now());
-        Log.d(TAG, "todoUpload: "+ strToday);
 
         todoCollectionReference()
                 .document(getid)
@@ -245,27 +241,25 @@ public class FireBaseRepository {
     }
 
     public void loadEvent() {
+
         userViewListener.loadingStart();
         todoCollectionReference()
                 .whereEqualTo("repeat", false)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        eventDatas.clear();
-                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
-                            if(documentSnapshot != null) {
-                                Todo todo = documentSnapshot.toObject(Todo.class);
-                                LocalDate todoDate = LocalDate.parse(todo.getDate());
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(todoDate.getYear(), todoDate.getMonthValue() - 1, todoDate.getDayOfMonth());
+                .addSnapshotListener((value, error) -> {
+                    eventDatas.clear();
+                    for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                        if(documentSnapshot != null) {
+                            Todo todo = documentSnapshot.toObject(Todo.class);
+                            LocalDate todoDate = LocalDate.parse(todo.getDate());
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.set(todoDate.getYear(), todoDate.getMonthValue() - 1, todoDate.getDayOfMonth());
 
-                                EventDay eventDay = new EventDay(calendar, R.drawable.three_icons);
-                                eventDatas.add(eventDay);
-                            }
+                            EventDay eventDay = new EventDay(calendar, R.drawable.three_icons);
+                            eventDatas.add(eventDay);
                         }
-                        firebaseListener.onSuccess(eventDatas);
-                        userViewListener.loadingEnd();
                     }
+                    firebaseListener.onSuccess(eventDatas);
+                    userViewListener.loadingEnd();
                 });
 
     }
@@ -277,19 +271,15 @@ public class FireBaseRepository {
         todoCollectionReference()
                 .whereEqualTo("date",date)
                 .whereEqualTo("repeat", false)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        todoDatas.clear();
-                        for(DocumentSnapshot documentSnapshot : value.getDocuments()){
-                            if(documentSnapshot != null) {
-                                Todo todo = documentSnapshot.toObject(Todo.class);
-                                todoDatas.add(todo);
-                            }
+                .addSnapshotListener((value, error) -> {
+                    todoDatas.clear();
+                    for(DocumentSnapshot documentSnapshot : value.getDocuments()){
+                        if(documentSnapshot != null) {
+                            Todo todo = documentSnapshot.toObject(Todo.class);
+                            todoDatas.add(todo);
                         }
-                        Log.d(TAG, "onEvent: for 끝");
-                        todoLiveDatas.setValue(todoDatas);
                     }
+                    todoLiveDatas.setValue(todoDatas);
                 });
 
         return todoLiveDatas;

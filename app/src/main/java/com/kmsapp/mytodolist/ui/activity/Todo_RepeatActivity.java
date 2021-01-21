@@ -22,6 +22,7 @@ import com.kmsapp.mytodolist.ui.Adapter.Todo_Today_Adapter;
 import com.kmsapp.mytodolist.ui.dialog.Todo_Detail_dialog;
 import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_Repeat_ViewModel;
+import com.kmsapp.mytodolist.utils.PushAlarmController;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
 public class Todo_RepeatActivity extends AppCompatActivity implements UserViewListener, Add_todoListener {
@@ -52,6 +53,10 @@ public class Todo_RepeatActivity extends AppCompatActivity implements UserViewLi
             @Override
             public void checkBoxClick(Todo todo) {
                 todo_repeat_viewModel.todoComplete(todo);
+                if(!todo.getTime().equals("알림 없음")){
+                    PushAlarmController pushAlarmController = new PushAlarmController();
+                    pushAlarmController.cancelAlarm(todo, getApplicationContext());
+                }
             }
         };
 
@@ -85,9 +90,14 @@ public class Todo_RepeatActivity extends AppCompatActivity implements UserViewLi
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
+                Todo todo  = todo_repeat_adapter.getDatas().get(position);
 
                 if(direction == ItemTouchHelper.LEFT){
-                    todo_repeat_viewModel.deleteTodo(todo_repeat_adapter.getDatas().get(position));
+                    todo_repeat_viewModel.deleteTodo(todo);
+                    if(!todo.getTime().equals("알림 없음")){
+                        PushAlarmController pushAlarmController = new PushAlarmController();
+                        pushAlarmController.cancelAlarm(todo, getApplicationContext());
+                    }
                 }
             }
         };
@@ -117,5 +127,9 @@ public class Todo_RepeatActivity extends AppCompatActivity implements UserViewLi
     @Override
     public void save(Todo todo) {
         todo_repeat_viewModel.todoUpload(todo);
+        if(!todo.getTime().equals("알림 없음")){
+            PushAlarmController pushAlarmController = new PushAlarmController();
+            pushAlarmController.setAlarm(todo, getApplicationContext());
+        }
     }
 }

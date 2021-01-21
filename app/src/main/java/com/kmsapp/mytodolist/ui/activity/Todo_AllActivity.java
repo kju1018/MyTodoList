@@ -22,6 +22,7 @@ import com.kmsapp.mytodolist.ui.Adapter.Todo_All_Adapter;
 import com.kmsapp.mytodolist.ui.dialog.Todo_Detail_dialog;
 import com.kmsapp.mytodolist.ui.dialog.Todo_add_dialog;
 import com.kmsapp.mytodolist.ui.viewModel.Todo_all_ViewModel;
+import com.kmsapp.mytodolist.utils.PushAlarmController;
 import com.kmsapp.mytodolist.utils.ToastUtil;
 
 public class Todo_AllActivity extends AppCompatActivity implements Add_todoListener, UserViewListener {
@@ -75,20 +76,24 @@ public class Todo_AllActivity extends AppCompatActivity implements Add_todoListe
 
     private ItemTouchHelper.SimpleCallback getSimpleCallback() {
         return new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-                @Override
-                public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                    return false;
-                }
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
 
-                @Override
-                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                        int position = viewHolder.getAdapterPosition();
-
-                        if(direction == ItemTouchHelper.LEFT){
-                            todo_all_viewModel.deleteTodo(todo_all_adapter.getDatas().get(position));
-                        }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Todo todo = todo_all_adapter.getDatas().get(position);
+                if(direction == ItemTouchHelper.LEFT){
+                    todo_all_viewModel.deleteTodo(todo);
+                    if(!todo.getTime().equals("알림 없음")){
+                        PushAlarmController pushAlarmController = new PushAlarmController();
+                        pushAlarmController.cancelAlarm(todo, getApplicationContext());
+                    }
                 }
-            };
+            }
+        };
     }
 
     @Override
@@ -115,5 +120,9 @@ public class Todo_AllActivity extends AppCompatActivity implements Add_todoListe
     @Override
     public void save(Todo todo) {
         todo_all_viewModel.todoUpload(todo);
+        if(!todo.getTime().equals("알림 없음")){
+            PushAlarmController pushAlarmController = new PushAlarmController();
+            pushAlarmController.setAlarm(todo, getApplicationContext());
+        }
     }
 }

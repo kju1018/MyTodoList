@@ -98,41 +98,18 @@ public class Todo_add_dialog extends BottomSheetDialogFragment {
         textViewTime = "알림 없음";
         todo_add_time.setText(textViewTime);
 
-        todo_add_calendar_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectDate();
-            }
-        });
+        todo_add_calendar_off.setOnClickListener(view14 -> selectDate());
 
-        todo_add_calendar_on.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectDate();
-            }
-        });
+        todo_add_calendar_on.setOnClickListener(view15 -> selectDate());
 
-        todo_add_repeat_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectRepeat();
-            }
-        });
+        todo_add_repeat_off.setOnClickListener(view16 -> selectRepeat());
 
-        todo_add_repeat_on.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectRepeat();
-            }
-        });
+        todo_add_repeat_on.setOnClickListener(view17 -> selectRepeat());
 
-        todo_add_time_off.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                todo_add_time_off.setVisibility(View.GONE);
-                todo_add_time_on.setVisibility(View.VISIBLE);
-                selectTimeSetting();
-            }
+        todo_add_time_off.setOnClickListener(view18 -> {
+            todo_add_time_off.setVisibility(View.GONE);
+            todo_add_time_on.setVisibility(View.VISIBLE);
+            selectTimeSetting();
         });
 
         todo_add_time_on.setOnClickListener(view1 -> selectTimeSetting());

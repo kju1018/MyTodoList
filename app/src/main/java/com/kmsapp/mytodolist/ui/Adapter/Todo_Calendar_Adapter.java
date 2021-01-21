@@ -36,11 +36,9 @@ public class Todo_Calendar_Adapter extends RecyclerView.Adapter<Todo_Calendar_Ad
     @Override
     public void onBindViewHolder(@NonNull Todo_Calendar_ViewHolder holder, int position) {
         Todo data = datas.get(position);
-
         holder.todoViewBinding.todoContent.setText(data.getContents());
         holder.todoViewBinding.todoDatetime.setText(data.getTime());
         holder.todoViewBinding.todoCheck.setVisibility(View.GONE);
-
     }
 
     @Override

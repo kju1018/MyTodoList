@@ -67,7 +67,7 @@ public class PushAlarmController {
         }else{//그냥 일정이라면
             requestCode  = Integer.parseInt(AlarmCodeUtil.schedulecode(todo.getDate(), todo.getTime()));
             pendingIntent = PendingIntent.getBroadcast(context, requestCode, receiverIntent,
-                    PendingIntent.FLAG_ONE_SHOT);
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -78,12 +78,12 @@ public class PushAlarmController {
                 e.printStackTrace();
             }
 
-
             calendar.setTime(datetime);
             selectTime  = calendar.getTimeInMillis();// 선택 시간
             if(nowTime > selectTime){
                 selectTime += interval;
             }
+
             alarmManager.set(AlarmManager.RTC_WAKEUP, selectTime, pendingIntent);
         }
 
@@ -108,4 +108,3 @@ public class PushAlarmController {
     }
 
 }
-//todo  습관일때, Wake UP 해결

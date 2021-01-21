@@ -42,12 +42,11 @@ public class AlarmReceiver extends BroadcastReceiver {
             todo = todoBundle.getParcelable(TODO);
         }
 
-        Log.d("asdf", "onReceive:dddd");
         if(todo.isRepeat()){
             LocalDate today = LocalDate.now();
             List repeatDay = todo.getRepeatDayEn();
             if (!repeatDay.contains(String.valueOf(today.getDayOfWeek()))) {
-                Log.d("asdf", "onReceive: 오늘은 반복 날이 아니얏!");
+                Log.d("asdf", "onReceive: 반복하는날이 아님");
                 return;
             }
         }
@@ -64,7 +63,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         builder.setContentTitle("할 일 알림");
         builder.setContentText(todo.getContents());
-        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setAutoCancel(true);
         builder.setContentIntent(pendingIntent);
 

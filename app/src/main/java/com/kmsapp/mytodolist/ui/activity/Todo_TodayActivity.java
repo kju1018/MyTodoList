@@ -53,8 +53,12 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
             @Override
             public void checkBoxClick(Todo todo) {
                 todo_today_viewModel.todoComplete(todo);
-                PushAlarmController pushAlarmController = new PushAlarmController();
-                pushAlarmController.cancelAlarm(todo, getApplicationContext());
+
+                if(!todo.getTime().equals("알림 없음")){
+                    PushAlarmController pushAlarmController = new PushAlarmController();
+                    pushAlarmController.cancelAlarm(todo, getApplicationContext());
+                }
+
             }
         };
 
@@ -91,12 +95,15 @@ public class Todo_TodayActivity extends AppCompatActivity implements Add_todoLis
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
+                Todo todo = todo_today_adapter.getDatas().get(position);
 
                 if(direction == ItemTouchHelper.LEFT){
-                    todo_today_viewModel.deleteTodo(todo_today_adapter.getDatas().get(position));
+                    todo_today_viewModel.deleteTodo(todo);
+                    if(!todo.getTime().equals("알림 없음")){
+                        PushAlarmController pushAlarmController = new PushAlarmController();
+                        pushAlarmController.cancelAlarm(todo, getApplicationContext());
+                    }
                 }
-                PushAlarmController pushAlarmController = new PushAlarmController();
-                pushAlarmController.cancelAlarm(todo_today_adapter.getDatas().get(position), getApplicationContext());
             }
         };
     }

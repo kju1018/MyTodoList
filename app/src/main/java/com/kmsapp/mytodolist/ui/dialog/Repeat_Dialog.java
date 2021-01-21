@@ -99,38 +99,30 @@ public class Repeat_Dialog extends DialogFragment {
         }
 //        listView.setItemChecked();
 //checkedItems.size()은 true의 개수
-        confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
+        confirm.setOnClickListener(view12 -> {
+            SparseBooleanArray checkedItems = listView.getCheckedItemPositions();
 
-                String strDayNumber = "";
-                String strDayKor = "";
-                List dayEn = new ArrayList();
-                List dayKor = new ArrayList();
-                for (int i = 0; i <= dayotweek.size(); i++) {
-                    if (checkedItems.get(i)) {
-                        strDayNumber += i;
-                        strDayKor += dayotweek.get(i) + ", ";
-                        dayEn.add(dayotweekEn.get(i));
-                        dayKor.add(dayotweek.get(i));
-                    }
+            String strDayNumber = "";
+            String strDayKor = "";
+            List dayEn = new ArrayList();
+            List dayKor = new ArrayList();
+            for (int i = 0; i <= dayotweek.size(); i++) {
+                if (checkedItems.get(i)) {
+                    strDayNumber += i;
+                    strDayKor += dayotweek.get(i) + ", ";
+                    dayEn.add(dayotweekEn.get(i));
+                    dayKor.add(dayotweek.get(i));
                 }
-                if(strDayKor.length() != 0) {
-                    strDayKor = strDayKor.substring(0, strDayKor.length() - 2);
-
-                }
-                repeat_listener.loadDay(strDayNumber, strDayKor, dayEn, dayKor, checkedItems);
-                dismiss();
             }
+            if(strDayKor.length() != 0) {
+                strDayKor = strDayKor.substring(0, strDayKor.length() - 2);
+
+            }
+            repeat_listener.loadDay(strDayNumber, strDayKor, dayEn, dayKor, checkedItems);
+            dismiss();
         });
 
-        cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
+        cancle.setOnClickListener(view1 -> dismiss());
 
         return view;
     }

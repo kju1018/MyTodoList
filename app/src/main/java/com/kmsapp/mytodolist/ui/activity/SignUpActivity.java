@@ -29,15 +29,14 @@ public class SignUpActivity extends AppCompatActivity implements UserViewListene
         activitySignUpBinding.signupPasswordchkText.addTextChangedListener(this);
         activitySignUpBinding.signupPasswordText.addTextChangedListener(this);
 
-        activitySignUpBinding.signupCompleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                authRepository = new FireAuthRepository(SignUpActivity.this);
-                email = activitySignUpBinding.signupEmailText.getText().toString();
-                password = activitySignUpBinding.signupPasswordText.getText().toString();
-                authRepository.firebaseSignUp(email, password);
-            }
+        activitySignUpBinding.signupCompleteBtn.setOnClickListener(view -> {
+            authRepository = new FireAuthRepository(SignUpActivity.this);
+            email = activitySignUpBinding.signupEmailText.getText().toString();
+            password = activitySignUpBinding.signupPasswordText.getText().toString();
+            authRepository.firebaseSignUp(email, password);
         });
+
+        activitySignUpBinding.signupBackBtn.setOnClickListener(view -> finish());
 
     }
 
